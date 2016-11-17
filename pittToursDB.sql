@@ -102,8 +102,11 @@ create table timeInfo(
 create or replace trigger setCost
 after insert
 on reservation
-declare cTime date
-set cTime = select * from timeInfo;
+declare cTime date;
+begin
+for each row
+select * from timeInfo
+into cTime
 	if new.reservation_date = cTime
 	then
 		select p.high_price as new_price
