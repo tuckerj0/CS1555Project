@@ -1,8 +1,35 @@
 import java.util.*;
 import java.io.*;
+import java.sql.*;
+import oracle.jdbc.driver.*;
 
 public class airlineUI{
+	
+	static final String USER = "jat134";	//Your username
+	static final String PASS = "hihi2222";	//your password
+	static final String url = "jdbc:oracle:thin:@db10.cs.pitt.edu:1521:dbclass";
+	
+	
+	static Connection conn = null;
+	static Statement stmt = null;
+	
 	public static void main(String args[]){
+		try{
+			DriverManager.registerDriver (new oracle.jdbc.driver.OracleDriver());
+			System.out.println("Connecting to database...");
+			conn = DriverManager.getConnection(url,USER,PASS);
+			System.out.println("Creating database...");
+			stmt = conn.createStatement();
+			String sql = "CREATE DATABASE pittToursDB.sql";
+			stmt.executeUpdate(sql);
+			System.out.println("Database created successfully...");
+			
+		}catch(SQLException se){
+			se.printStackTrace();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
 		Scanner scanner = new Scanner(System.in);
 		int choice = 0;
 		while(true){
@@ -18,6 +45,17 @@ public class airlineUI{
 				userInterface();
 			}
 			else if(choice == 3){
+				try{
+					if(stmt!=null)
+            			stmt.close();
+				}catch(SQLException se2){}
+				try{
+					if(conn!=null)
+						conn.close();
+				}catch(SQLException se){
+					se.printStackTrace();
+				}
+				System.out.println("Exit successful.");
 				System.exit(0);
 			}
 			else{
@@ -56,6 +94,17 @@ public class airlineUI{
 				
 			}
 			else if(userInput == 7){
+				try{
+					if(stmt!=null)
+            			stmt.close();
+				}catch(SQLException se2){}
+				try{
+					if(conn!=null)
+						conn.close();
+				}catch(SQLException se){
+					se.printStackTrace();
+				}
+				System.out.println("Exit successful.");
 				System.exit(0);
 			}
 			else{
@@ -110,6 +159,17 @@ public class airlineUI{
 				
 			}
 			else if(userInput == 11){
+				try{
+					if(stmt!=null)
+            			stmt.close();
+				}catch(SQLException se2){}
+				try{
+					if(conn!=null)
+						conn.close();
+				}catch(SQLException se){
+					se.printStackTrace();
+				}
+				System.out.println("Exit successful.");
 				System.exit(0);
 			}
 			else{
