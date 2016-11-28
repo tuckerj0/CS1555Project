@@ -97,7 +97,34 @@ create table timeInfo(
 	constraint timeInfo_pk primary key (c_date)
 );
 
-
+--set cost trigger
+--sets cost of reservation upon insertion
+create or replace trigger setCost
+before insert
+on reservation
+for each row
+declare 
+cTime date;
+new_price int;
+begin
+select *
+into cTime
+from timeInfo;
+	if (:new.reservation_date = cTime)
+	then
+		select high_price into new_price
+		from price
+		where :new.start_city = departure_city and :new.end_city = arrival_city;
+	end if;
+	if (:new.reservation_date != cTime)
+	then
+		select low_price into new_price
+		from price
+		where :new.start_city = departure_city and :new.end_city = arrival_city;
+	end if;
+:new.cost := new_price;
+END;
+/
 
 --procedure
 create or replace function biggerPlane (plane_capacity in int) return char (4)
