@@ -173,7 +173,6 @@ public class airlineUI{
 			else{
 				System.out.println("Invalid input\n");
 			}
-			scan.close();
 
 		}
 	}
@@ -217,9 +216,9 @@ public class airlineUI{
 	}
 	
 	public static void loadAirlineInformation() throws IOException, SQLException {
-		Scanner scan = new Scanner (System.in);
+		Scanner scan2 = new Scanner (System.in);
 		System.out.println("Please enter a file name to load airline information");
-		String fileName = scan.next();
+		String fileName = scan2.nextLine();
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		String line;
 		System.out.println("Inserting airline info...");
@@ -228,14 +227,14 @@ public class airlineUI{
 			String airlineID = var[0];
 			String airlineName = var[1];
 			String airlineAbbreviation = var[2];
-			String yearFounded = var[3];
-			
+			String city = var[3];
+			String yearFounded = var[4];
+			int year = Integer.parseInt(yearFounded);
 			Statement stmt = conn.createStatement();
-			String insertAirline = "INSERT INTO Airline (airline_id, airline_name, airline_abbreviation, year_founded) VALUES ('"+airlineID+"','" +airlineName+"','"+airlineAbbreviation+"','"+yearFounded+"')";
+			String insertAirline = "INSERT INTO Airline (aid, name, abbreviation, year_founded) VALUES ('"+airlineID+"','" +airlineName+"','"+airlineAbbreviation+"','"+year+"')";
 			stmt.executeUpdate(insertAirline);
 		}
 		br.close();
-		scan.close();
 	}
 	
 	public static void loadScheduleInformation() throws IOException, SQLException {
@@ -260,7 +259,6 @@ public class airlineUI{
 			stmt.executeUpdate(insertFlight);
 		}
 		br.close();
-		scan.close();
 	}
 	
 	public static int changePricingInformation() throws SQLException {
@@ -319,7 +317,6 @@ public class airlineUI{
 		Statement stmt = conn.createStatement();
 		String updatePrice = "UPDATE PRICE SET high_cost =" + highCost + ",low_cost=" + lowCost + "WHERE departure_city ='" + departureCity + "' and arrival_city='" + arrivalCity + "' and airline_id='"+airlineID+ "'";
 		stmt.executeUpdate(updatePrice);
-		input.close();
 		return 0;
 	}
 	
@@ -343,7 +340,6 @@ public class airlineUI{
 			stmt.executeUpdate(insertPrice);
 		}
 		br.close();
-		scan.close();
 	}
 	
 	public static int loadPlaneInformation() throws IOException, SQLException {
@@ -375,7 +371,6 @@ public class airlineUI{
 			stmt.executeUpdate(insertPlane);
 		}
 		br.close();
-		scan.close();
 		return 0;
 	}
 	
@@ -394,7 +389,6 @@ public class airlineUI{
 		Statement stmt = conn.createStatement();
 		String manifesto = "Select salutation, first_name, last_name FROM Customer AS c INNER JOIN Reservation as r ON c.cid = r.cid INNER JOIN Reservation_detail as d ON r.reservation_number = d.reservation_number WHERE Reservation_detail.flight_number = " + flightNumber + " and" + "Reservation_detail.flight_date = " + date + "";
 		ResultSet rs = stmt.executeQuery(manifesto);
-		scan.close();
 		return 0;
 	}
 
