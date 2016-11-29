@@ -13,6 +13,7 @@ public class airlineUI{
 																					//one must be commented out for code to function
 	private static Connection conn = null;
 	private static Statement stmt = null;
+	private static Statement stmt2 = null;
 	
 	public static void main(String args[]){
 		try{
@@ -21,6 +22,7 @@ public class airlineUI{
 			conn = DriverManager.getConnection(url,USER,PASS);
 			System.out.println("Creating database...");
 			stmt = conn.createStatement();
+			stmt2 = conn.createStatement();
 			//String sql = "CREATE DATABASE pittToursDB";
 			//stmt.executeUpdate(sql);
 			System.out.println("Database created successfully...");
@@ -427,7 +429,7 @@ public class airlineUI{
 				findRoutes();
 			}
 			else if(userInput == 5){
-
+				findRoutesByAirline();
 			}
 			else if(userInput == 6){
 				
@@ -675,7 +677,7 @@ public class airlineUI{
 		String ca = "";
 		String cb = "";
 		int i = 0;
-		System.out.println("---Find all route menu---");
+		System.out.println("---Find all route by airline menu---");
 		try{
 			System.out.println("Please enter the following");
 			System.out.println("Departure city (abbv.): ");
@@ -707,7 +709,112 @@ public class airlineUI{
 				String flight_no = rs.getString("flight_number");
 				String schedule = rs.getString("weekely_schedule");
 				sql = "SELECT * FROM flight WHERE departure_city = '" + aCity + "' AND arrival_city = '" + cb +"'";
-				ResultSet rs1 = stmt.executeQuery(sql);
+				ResultSet rs1 = stmt2.executeQuery(sql);
+				while(rs1.next()){
+					String flight_no2 = rs1.getString("flight_number");
+					String aTime2 = rs1.getString("arrival_time");
+					String dTime2 = rs1.getString("departure_time");
+					String schedule2 = rs1.getString("weekely_schedule");
+					
+					int f1arrival_time = Integer.parseInt(aTime);
+					int f2departure_time = Integer.parseInt(dTime2);
+					if(f1arrival_time >= 100){
+						if(f1arrival_time < f2departure_time - 100){}
+						else{
+							continue;
+						}
+					}
+					else{
+						f1arrival_time = f1arrival_time + 2400;
+						if(f1arrival_time > f2departure_time - 100){}
+						else{
+							continue;
+						}
+					}
+					String[] days = schedule.split("-");
+					boolean sameday = false;
+					int j = 0;
+					while(sameday != true && j < days.length){
+						if(schedule2.contains(days[j])){
+							sameday = true;
+						}
+					}
+					if(sameday == false){
+						continue;
+					}
+					System.out.println("Flight no: "+flight_no);
+					System.out.println("Departs " + ca + " at " + dTime);
+					System.out.println("Arrives at " + aCity + " at " + aTime + "\n");
+					System.out.println("Flight no: "+flight_no2);
+					System.out.println("Departs " + aCity + " at " + dTime2);
+					System.out.println("Arrives at " + cb + " at " + aTime2 + "\n");
+					System.out.print("\n");
+					
+				}
+			}
+			
+			
+		}catch(SQLException se){
+				se.printStackTrace();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	public static void findRoutesByAirline(){
+		Scanner scanner = new Scanner(System.in);
+		String sql = "";
+		String ca = "";
+		String cb = "";
+		String aln = "";
+		String aid = "";
+		int i = 0;
+		System.out.println("---Find all route menu---");
+		try{
+			System.out.println("Please enter the following");
+			System.out.println("Airline name: ");
+			aln = scanner.nextLine();
+			System.out.println("Departure city (abbv.): ");
+			ca = scanner.nextLine();
+			System.out.println("Arrival city (abbv.): ");
+			cb = scanner.nextLine();
+			
+			sql = "SELECT aid FROM airline WHERE name = '" + aln+ "'";
+			ResultSet rs = stmt.executeQuery(sql);
+			if(rs.next){
+				aid = = rs.getString("aid");
+			}
+			else{
+				System.out.println("Airline not found. Returning to menu");
+				return;
+			}
+			
+			
+			sql = "SELECT * FROM flight WHERE departure_city = '" + ca + "' AND arrival_city = '" + cb +"'" "AND airline_id = '"+aid+"'";
+			rs = stmt.executeQuery(sql);
+			System.out.println("Direct routes: \n");
+			while(rs.next()){
+				String fn  = rs.getString("flight_number");
+				String dc  = rs.getString("departure_city");
+				String dt  = rs.getString("departure_time");
+				String ac  = rs.getString("arrival_city");
+				String at  = rs.getString("arrival_time");
+				System.out.println("Flight no: "+fn);
+				System.out.println("Departs " + dc + " at " + dt);
+				System.out.println("Arrives at " + ac + " at " + at + "\n");
+			}
+			
+			System.out.println("Non-direct routes:\n");
+		
+			sql = "SELECT * FROM flight WHERE departure_city = '" + ca + "' AND arrival_city != '" + cb +"'" "AND airline_id = '"+aid+"'";
+			rs = stmt.executeQuery(sql);
+			while(rs.next()){
+				String aCity = rs.getString("arrival_city");
+				String dTime = rs.getString("departure_time");
+				String aTime = rs.getString("arrival_time");
+				String flight_no = rs.getString("flight_number");
+				String schedule = rs.getString("weekely_schedule");
+				sql = "SELECT * FROM flight WHERE departure_city = '" + aCity + "' AND arrival_city = '" + cb +"'" "AND airline_id = '"+aid+"'";
+				ResultSet rs1 = stmt2.executeQuery(sql);
 				while(rs1.next()){
 					String flight_no2 = rs1.getString("flight_number");
 					String aTime2 = rs1.getString("arrival_time");
