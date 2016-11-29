@@ -443,7 +443,7 @@ public class airlineUI{
 				
 			}
 			else if(userInput == 9){
-				
+				showReservationInfo();
 			}
 			else if(userInput == 10){
 				
@@ -1278,5 +1278,43 @@ public class airlineUI{
 			e.printStackTrace();
 		}
 	}
-		
+	
+	public static void showReservationInfo(){
+		Scanner scanner = new Scanner(System.in);
+		String r_no;
+		String sql;
+		System.out.println("---Show Reservation Info---");
+		try{
+			System.out.println("Reservation number: ");
+			r_no = scanner.nextLine();
+			sql = "SELECT * FROM reservation_detail WHERE  reservation_number = '" +r_no +"'";
+			ResultSet rs = stmt.executeQuery(sql);
+			boolean found = false;
+			while(rs.next()){
+				String flight_no = rs.getString("flight_number");
+				String date = rs.getString("flight_date");
+				int leg = rs.getInt("leg");
+				System.out.println("leg: "+leg+" flight number: "+flight_no+ " date: " + date+"");
+				
+				found = true;
+			}
+			if(found == false){
+				System.out.println("Reservation not found");
+			}
+			rs.close();
+		}catch(SQLException se){
+			se.printStackTrace();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
