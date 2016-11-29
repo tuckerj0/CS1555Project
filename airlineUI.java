@@ -1,16 +1,17 @@
 import java.util.*;
 import java.io.*;
 import java.sql.*;
+import java.text.ParseException;
 
 public class airlineUI{
 	
 	static final String USER = "jat134";	//Your username
 	static final String PASS = "hihi2222";	//your password
-	static final String url = "jdbc:oracle:thin:@db10.cs.pitt.edu:1521:dbclass";
-	
-	
-	static Connection conn = null;
-	static Statement stmt = null;
+	static final String url = "jdbc:oracle:thin:@class3.cs.pitt.edu:1521:dbclass";	//if connecting to class3
+	//static final String url = "jdbc:oracle:thin:@unixs.cs.pitt.edu:1521:dbclass";	//if connecting to unixs
+																					//one must be commented out for code to function
+	private static Connection conn = null;
+	private static Statement stmt = null;
 	
 	public static void main(String args[]){
 		try{
@@ -19,8 +20,8 @@ public class airlineUI{
 			conn = DriverManager.getConnection(url,USER,PASS);
 			System.out.println("Creating database...");
 			stmt = conn.createStatement();
-			String sql = "CREATE DATABASE pittToursDB.sql";
-			stmt.executeUpdate(sql);
+			//String sql = "CREATE DATABASE pittToursDB";
+			//stmt.executeUpdate(sql);
 			System.out.println("Database created successfully...");
 			
 		}catch(SQLException se){
@@ -78,12 +79,12 @@ public class airlineUI{
 			if(userInput == 1){
 				System.out.println("Are you sure you want to delete the entire database? Please type Y for yes or N for no");
 				Scanner scan1 = new Scanner(System.in);
-				String s = scan1.next();
-				if (s == "Y") {
+				String s = scan1.nextLine();
+				if (s.equals("Y")) {
 					deleteDatabase();
 				}
 				else {
-					System.out.println("You can changed your mind about deleting the database. Goodbye.");
+					System.out.println("You have changed your mind about deleting the database. Goodbye.");
 					System.exit(0);
 				}
 				scan1.close();
@@ -129,7 +130,7 @@ public class airlineUI{
 					}
 				}
 				else {
-					System.out.println("You have inputted the wrong entry. Sorry, goodbye.");
+					System.out.println("You have input the wrong entry. Sorry, goodbye.");
 					System.exit(0);
 				}
 				scan1.close();
@@ -224,7 +225,7 @@ public class airlineUI{
 			String yearFounded = var[3];
 			
 			Statement stmt = conn.createStatement();
-			String insertAirline = "INSERT INTO Airline (airline_id, airline_name, airline_abbreviation, year_founded) VALUES ('"+airlineID+"','" +airlineName+"','"+airlineAbbreviation+"','"+yearFounded+"');";
+			String insertAirline = "INSERT INTO Airline (airline_id, airline_name, airline_abbreviation, year_founded) VALUES ('"+airlineID+"','" +airlineName+"','"+airlineAbbreviation+"','"+yearFounded+"')";
 			stmt.executeUpdate(insertAirline);
 		}
 		br.close();
@@ -249,7 +250,7 @@ public class airlineUI{
 			String weeklySchedule = var[6];
 			
 			Statement stmt = conn.createStatement();
-			String insertFlight = "INSERT INTO Flight (flight_number, plane_type, departure_city, arrival_city, departure_time, arrival_time, weekly_schedule) VALUES ('"+flightNumber+"','" +planeType+"','"+departureCity+"','"+arrivalCity+"','"+departureTime+"','"+arrivalTime+"','"+weeklySchedule+"');";
+			String insertFlight = "INSERT INTO Flight (flight_number, plane_type, departure_city, arrival_city, departure_time, arrival_time, weekly_schedule) VALUES ('"+flightNumber+"','" +planeType+"','"+departureCity+"','"+arrivalCity+"','"+departureTime+"','"+arrivalTime+"','"+weeklySchedule+"')";
 			stmt.executeUpdate(insertFlight);
 		}
 		br.close();
@@ -266,7 +267,7 @@ public class airlineUI{
 		
 		System.out.println("Please enter departure city as airport code. E.g. Pittsburgh will be PIT");
 		if (input.next().length() > 3) {
-			System.out.println("Sorry you inputted too many letters for the airport code. Goodbye.");
+			System.out.println("Sorry you input too many letters for the airport code. Goodbye.");
 			return 0;
 		}
 		else {
@@ -275,7 +276,7 @@ public class airlineUI{
 		
 		System.out.println("Please enter arrival city as airport code. E.g. Pittsburgh will be PIT");
 		if (input.next().length() > 3) {
-			System.out.println("Sorry you inputted too many letters for the airport code. Goodbye.");
+			System.out.println("Sorry you input too many letters for the airport code. Goodbye.");
 			return 0;
 		}
 		else {
@@ -284,7 +285,7 @@ public class airlineUI{
 		
 		System.out.println("Please enter airline ID number. The number should not be more than three numbers");
 		if (input.next().length() > 3) {
-			System.out.println("Sorry you inputted too many numbers for the airline ID. Goodbye.");
+			System.out.println("Sorry you input too many numbers for the airline ID. Goodbye.");
 			return 0;
 		}
 		else {
@@ -293,7 +294,7 @@ public class airlineUI{
 		
 		System.out.println("Please enter the high cost for this flight. Input should be a max of 3 digits and rounded to the closest ones place. E.g. $230.10 will be 230");
 		if (input.next().length() > 3) {
-			System.out.println("Sorry you inputted too many numbers for the High Cost. Goodbye.");
+			System.out.println("Sorry you inputt too many numbers for the High Cost. Goodbye.");
 			return 0;
 		}
 		else {
@@ -302,7 +303,7 @@ public class airlineUI{
 		
 		System.out.println("Please enter the low cost for this flight. Input should be a max of 3 digits and rounded to the closest ones place. E.g. $230.10 will be 230");
 		if (input.next().length() > 3) {
-			System.out.println("Sorry you inputted too many numbers for the airline ID. Goodbye.");
+			System.out.println("Sorry you input too many numbers for the airline ID. Goodbye.");
 			return 0;
 		}
 		else {
@@ -310,7 +311,7 @@ public class airlineUI{
 		}
 		
 		Statement stmt = conn.createStatement();
-		String updatePrice = "UPDATE PRICE SET high_cost =" + highCost + ",low_cost=" + lowCost + "WHERE departure_city =" + departureCity + " and arrival_city=" + arrivalCity + " and airline_id="+airlineID+ ";";
+		String updatePrice = "UPDATE PRICE SET high_cost =" + highCost + ",low_cost=" + lowCost + "WHERE departure_city ='" + departureCity + "' and arrival_city='" + arrivalCity + "' and airline_id='"+airlineID+ "'";
 		stmt.executeUpdate(updatePrice);
 		input.close();
 		return 0;
@@ -332,7 +333,7 @@ public class airlineUI{
 			String lowPrice = var[4];
 			
 			Statement stmt = conn.createStatement();
-			String insertPrice = "INSERT INTO Price (departure_city, arrival_city, airline_id, high_price, low_price) VALUES ('"+departureCity+"','" +arrivalCity+"','"+airlineID+"','"+highPrice+"','"+lowPrice+"');";
+			String insertPrice = "INSERT INTO Price (departure_city, arrival_city, airline_id, high_price, low_price) VALUES ('"+departureCity+"','" +arrivalCity+"','"+airlineID+"','"+highPrice+"','"+lowPrice+"')";
 			stmt.executeUpdate(insertPrice);
 		}
 		br.close();
@@ -364,7 +365,7 @@ public class airlineUI{
 				return 0;
 			}
 			Statement stmt = conn.createStatement();
-			String insertPlane = "INSERT INTO Plane (plane_type, manufacture, plane_capacity, last_service, year, owner_id) VALUES ('"+planeType+"','" +manufacture+"','"+planeCapacity+"','"+lastService+"','"+year+"','"+ownerID+"');";
+			String insertPlane = "INSERT INTO Plane (plane_type, manufacture, plane_capacity, last_service, year, owner_id) VALUES ('"+planeType+"','" +manufacture+"','"+planeCapacity+"','"+lastService+"','"+year+"','"+ownerID+"')";
 			stmt.executeUpdate(insertPlane);
 		}
 		br.close();
@@ -385,7 +386,7 @@ public class airlineUI{
 			return 0;
 		}
 		Statement stmt = conn.createStatement();
-		String manifesto = "Select salutation, first_name, last_name FROM Customer AS c INNER JOIN Reservation as r ON c.cid = r.cid INNER JOIN Reservation_detail as d ON r.reservation_number = d.reservation_number WHERE Reservation_detail.flight_number = " + flightNumber + " and" + "Reservation_detail.flight_date = " + date + ";";
+		String manifesto = "Select salutation, first_name, last_name FROM Customer AS c INNER JOIN Reservation as r ON c.cid = r.cid INNER JOIN Reservation_detail as d ON r.reservation_number = d.reservation_number WHERE Reservation_detail.flight_number = " + flightNumber + " and" + "Reservation_detail.flight_date = " + date + "";
 		ResultSet rs = stmt.executeQuery(manifesto);
 		scan.close();
 		return 0;
@@ -487,9 +488,9 @@ public class airlineUI{
 					fname = scanner.nextLine();
 					System.out.println("Last name: ");
 					lname = scanner.nextLine();
-					sql = "SELECT first_name, last_name FROM customer WHERE first_name = "+fname+" AND last_name = " +lname +"";
+					sql = "SELECT first_name, last_name FROM customer WHERE first_name = '"+fname+"' AND last_name = '" +lname +"'";
 					ResultSet rs = stmt.executeQuery(sql);
-					if(rs.next() == false){
+					if(rs.next() == true){
 						System.out.println("A customer by this name already exists.");
 						System.out.println("Please eneter a new name.");
 					}
@@ -544,19 +545,22 @@ public class airlineUI{
 				System.out.println("Adding customer to system...");
 				correct = false;
 			}
-			sql = "SELECT MAX(cid) FROM customer";
+			sql = "SELECT MAX(cid) as maxid FROM customer";
 			ResultSet rs = stmt.executeQuery(sql);
+			
 			int cid = -1;
 			int ffm = 0;
 			if(rs.next()){
-				cid  = rs.getInt("cid"); 
+				cid  = rs.getInt("maxid");
+				cid++;
+				System.out.println(""+cid);
 			}
 			else{
-				System.out.println("error addin customer");
+				System.out.println("error adding customer");
 			}
 			if(cid != -1){
 				sql = "insert into customer values('"+cid+"', '"+salutation+"', '"+fname+"', '"+lname+"', '"+ccn+"', "+cced2+", '"+street+"', '"+
-									city + "', '"+state+"', '"+pn+"', '"+email+"', '"+ffm+"');";
+									city + "', '"+state+"', '"+pn+"', '"+email+"', '"+ffm+"')";
 				stmt.executeUpdate(sql);
 				System.out.println("Success!");
 				System.out.println("Your customer ID is " + cid);
@@ -579,7 +583,7 @@ public class airlineUI{
 			fname = scanner.nextLine();
 			System.out.println("Last name: ");
 			lname = scanner.nextLine();
-			sql = "SELECT first_name, last_name FROM customer WHERE first_name = "+fname+" AND last_name = " +lname +"";
+			sql = "SELECT * FROM customer WHERE first_name = '"+fname+"' AND last_name = '" +lname +"'";
 			ResultSet rs = stmt.executeQuery(sql);
 			
 			if(rs.next()){
@@ -607,7 +611,7 @@ public class airlineUI{
 		String sql = "";
 		String ca = "";
 		String cb = "";
-		System.out.println("---Find flight price menu---");System.out.println("Available cities:");
+		System.out.println("---Find flight price menu---");
 		try{
 			System.out.println("Please enter the following");
 			System.out.println("Departure city (abbv.): ");
@@ -615,7 +619,7 @@ public class airlineUI{
 			System.out.println("Arrival city (abbv.): ");
 			cb = scanner.nextLine();
 			
-			sql = "SELECT high_price, low_price FROM price WHERE departure_city = " + ca + " AND arrival_city = " + cb +"";
+			sql = "SELECT high_price, low_price FROM price WHERE departure_city = '" + ca + "' AND arrival_city = '" + cb +"'";
 			ResultSet rs = stmt.executeQuery(sql);
 			int AtoBhp = 0, AtoBlp = 0;
 			if(rs.next()){
@@ -628,7 +632,7 @@ public class airlineUI{
 			else{
 				System.out.println("Flight from "+ca+" to" + cb+ " not available");
 			}
-			sql = "SELECT high_price, low_price FROM price WHERE departure_city = " + cb + " AND arrival_city = " + ca +"";
+			sql = "SELECT high_price, low_price FROM price WHERE departure_city = '" + cb + "' AND arrival_city = '" + ca +"'";
 			ResultSet rs1 = stmt.executeQuery(sql);
 			int BtoAhp = 0, BtoAlp = 0;
 			if(rs1.next()){
@@ -660,9 +664,39 @@ public class airlineUI{
 		}
 	}
 	public static void findRoutes(){
-		
+		Scanner scanner = new Scanner(System.in);
+		String sql = "";
+		String ca = "";
+		String cb = "";
+		System.out.println("---Find all route menu---");
+		try{
+			System.out.println("Please enter the following");
+			System.out.println("Departure city (abbv.): ");
+			ca = scanner.nextLine();
+			System.out.println("Arrival city (abbv.): ");
+			cb = scanner.nextLine();
+			sql = "SELECT * FROM flight WHERE departure_city = '" + ca + "' AND arrival_city = '" + cb +"'";
+			ResultSet rs = stmt.executeQuery(sql);
+			System.out.println("Direct routes: \n");
+			while(rs.next()){
+				String fn  = rs.getString("flight_number");
+				String dc  = rs.getString("departure_city");
+				String dt  = rs.getString("departure_time");
+				String ac  = rs.getString("arrival_city");
+				String at  = rs.getString("arrival_time");
+				System.out.println("Flight no: "+fn);
+				System.out.println("Departs " + dc + " at " + dt);
+				System.out.println("Arrives at " + ac + " at " + at + "\n");
+			}
+			
+			System.out.println("Non-direct routes:\n");
+			
+			
+			
+		}catch(SQLException se){
+				se.printStackTrace();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 }
-
-
-
