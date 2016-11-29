@@ -440,7 +440,7 @@ public class airlineUI{
 				findRoutesWithSeatsByAirline();
 			}
 			else if(userInput == 8){
-				
+				addReservation();
 			}
 			else if(userInput == 9){
 				showReservationInfo();
@@ -1309,7 +1309,74 @@ public class airlineUI{
 		}
 	}
 	
+	public static void addReservation () throws SQLException {
+		System.out.println("I will need you to provide all the information of all your flights. We will get the info one leg at a time");
+		Scanner scan = new Scanner (System.in);
+		int leg = 0;
+		String flightDate = "";
+		String flightNumber = "";
+		int flightCount = 0;
+		int planeCapacity = 0;
+		//boolean will be true only if flight has seats
+		boolean flightFlag = false; 
+		int reservationNumber = 351;
 	
+		for (int i = 0; i<4; i++){
+			System.out.println("Enter your flight number. If there are no more flight numbers to be inputted then enter 0");
+			flightNumber = scan.next();
+			//if flight number is 0 then leave loop
+			if (Integer.parseInt(flightNumber) == 0) {
+				System.out.println("You have chosen to not input anymore legs");
+				break;
+			}
+			else {
+				//increase value of leg
+				leg++;
+				// continue to enter date
+				System.out.println("Please enter the date for this leg");
+				flightDate = scan.next();
+				
+				//get flight count
+				Statement st = conn.createStatement();
+				String flightNumberCount = "SELECT COUNT(flight_number) FROM Reservation_detail WHERE flight_number =" + flightNumber + " and flight_date = " + flightDate + ";";
+				ResultSet res = st.executeQuery(flightNumberCount); 
+				while (res.next()) {
+					flightCount = res.getInt(1);
+				}
+				
+				//get plane capacity count
+				Statement st1 = conn.createStatement();
+				String planeCapacityCount = "SELECT plane_capacity FROM Plane AS p WHERE p.plane_type = flight.plane_type and flight.flight_number =" + flightNumber + ";";
+				ResultSet res1 = st1.executeQuery(planeCapacityCount);
+				while (res1.next()) {
+					planeCapacity = res.getInt(1);
+				}
+				
+				//now compare the capacities
+				//if flightcount is less than plane capacity then there is available seats
+				if (flightCount < planeCapacity) {
+					System.out.println("There are avilable seats on this flight");
+					flightFlag = true;
+				}
+				else {
+					System.out.println("There are no available seats on this flight");
+					flightFlag = false;
+				}
+			}
+		} // end for loop
+		// all legs have available seats. WE GOOD!
+		if (flightFlag == true) {
+			//reservation number starts at 351 and keeps going up for each reservation made
+			//generates unique reservation number
+			reservationNumber = reservationNumber++;
+			System.out.println("Congrats, all your flights have available seats. Here is your reservation number: " + reservationNumber);
+		}
+		else {
+			System.out.println("Sorry one of the flights you mentioned does not have any available seats.");
+		}
+		
+		scan.close();
+	}
 	
 	
 	
