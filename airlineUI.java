@@ -180,7 +180,7 @@ public class airlineUI{
 		Scanner scanner = new Scanner(System.in);
 		Boolean correct = true;
 		Boolean verify = true;
-		String salutation, fname, lname, street, city, state, pn, email, ccn, cced, cced2;
+		String salutation = "", fname = "", lname = "", street = "", city= "", state = "", pn = "", email = "", ccn= "", cced  "", cced2 = "";
 		String sql;
 		try{
 			while(correct){
@@ -311,9 +311,9 @@ public class airlineUI{
 	}
 	public static void findPrice(){
 		Scanner scanner = new Scanner(System.in);
-		String sql;
-		String ca;
-		String cb;
+		String sql = "";
+		String ca = "";
+		String = "";
 		System.out.println("---Find flight price menu---");System.out.println("Available cities:");
 		try{
 			System.out.println("Please enter the following");
