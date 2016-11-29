@@ -2,6 +2,7 @@ import java.util.*;
 import java.io.*;
 import java.sql.*;
 import java.text.ParseException;
+import java.lang.*;
 
 public class airlineUI{
 	
@@ -176,32 +177,33 @@ public class airlineUI{
 	public static int deleteDatabase () {
 		System.out.println("Deleting Database...");
 		try {
-			Statement stmt = conn.createStatement();
-			String airlineDelete = "TRUNCATE Airline";
-			stmt.executeUpdate(airlineDelete);
-			
-			String flightDelete = "TRUNCATE Flight";
-			stmt.executeUpdate(flightDelete);
-			
-			String planeDelete = "TRUNCATE Plane";
-			stmt.executeUpdate(planeDelete);
-			
-			String priceDelete = "TRUNCATE Price";
-			stmt.executeUpdate(priceDelete);
-			
-			String customerDelete = "TRUNCATE Customer";
-			stmt.executeUpdate(customerDelete);
-			
-			String reservationDelete = "TRUNCATE Reservation";
-			stmt.executeUpdate(reservationDelete);
-			
-			String reservationDetailsDelete = "TRUNCATE Reservation_detail";
-			stmt.executeUpdate(reservationDetailsDelete);
-			
-			String dateDelete = "TRUNCATE Date";
+			String dateDelete = "DELETE * FROM Date";
 			stmt.executeUpdate(dateDelete);
-			
+			System.out.println("Date erased");
+			String reservationDetailsDelete = "DELETE * FROM Reservation_detail";
+			stmt.executeUpdate(reservationDetailsDelete);
+			System.out.println("Reservation data detail erased");
+			String reservationDelete = "DELETE * FROM Reservation";
+			stmt.executeUpdate(reservationDelete);
+			System.out.println("Reservation data erased");
+			String customerDelete = "DELETE * FROM Customer";
+			stmt.executeUpdate(customerDelete);
+			System.out.println("Customer data erased");
+			String priceDelete = "DELETE * FROM Price";
+			stmt.executeUpdate(priceDelete);
+			System.out.println("Price data erased");
+			String planeDelete = "DELETE * FROM Plane";
+			stmt.executeUpdate(planeDelete);
+			System.out.println("Plane data erased");
+			String flightDelete = "DELETE * FROM Flight";
+			stmt.executeUpdate(flightDelete);
+			System.out.println("Flight data erased");
+			Statement stmt = conn.createStatement();
+			String airlineDelete = "DELETE * FROM Airline";
+			stmt.executeUpdate(airlineDelete);
+			System.out.println("Airline data erased");
 			System.out.println("Database is now empty");
+			conn.commit();
 			
 		} catch (SQLException e) {
 			System.out.println("An error occured while deleting database. Goodbye.");
@@ -621,32 +623,36 @@ public class airlineUI{
 			
 			sql = "SELECT high_price, low_price FROM price WHERE departure_city = '" + ca + "' AND arrival_city = '" + cb +"'";
 			ResultSet rs = stmt.executeQuery(sql);
+			boolean r = false;
 			int AtoBhp = 0, AtoBlp = 0;
 			if(rs.next()){
 				AtoBhp  = rs.getInt("high_price");
 				AtoBlp  = rs.getInt("low_price");
-				System.out.println("Flight from "+ca+" to" + cb+ ":");
+				System.out.println("Flight from "+ca+" to " + cb+ ":");
 				System.out.println("High price: " +AtoBhp);
 				System.out.println("Low price: " +AtoBlp);
+				r = true;
 			}
 			else{
-				System.out.println("Flight from "+ca+" to" + cb+ " not available");
+				System.out.println("Flight from "+ca+" to " + cb+ " not available");
 			}
 			sql = "SELECT high_price, low_price FROM price WHERE departure_city = '" + cb + "' AND arrival_city = '" + ca +"'";
 			ResultSet rs1 = stmt.executeQuery(sql);
+			boolean r1 = false;
 			int BtoAhp = 0, BtoAlp = 0;
 			if(rs1.next()){
-				BtoAhp  = rs.getInt("high_price");
-				BtoAlp  = rs.getInt("low_price");
-				System.out.println("Flight from "+cb+" to" + ca+ ":");
+				BtoAhp  = rs1.getInt("high_price");
+				BtoAlp  = rs1.getInt("low_price");
+				System.out.println("Flight from "+cb+" to " + ca+ ":");
 				System.out.println("High price: " +BtoAhp);
 				System.out.println("Low price: " +BtoAlp);
+				r1 = true;
 			}
 			else{
-				System.out.println("Flight from "+cb+" to" + ca+ " not available");
+				System.out.println("Flight from "+cb+" to " + ca+ " not available");
 			}
-			if(rs.next() && rs1.next()){
-				System.out.println("Round trip from "+ca+" to" + cb+ ":");
+			if(r && r1){
+				System.out.println("Round trip from "+ca+" to " + cb+ ":");
 				int rthp = BtoAhp + AtoBhp;
 				int rtlp = BtoAlp + AtoBlp;
 				System.out.println("High price: " +rthp);
@@ -655,7 +661,7 @@ public class airlineUI{
 			else{
 				System.out.println("Round trip not available.");
 			}
-			
+			rs1.close();
 			rs.close();
 		}catch(SQLException se){
 				se.printStackTrace();
@@ -668,6 +674,7 @@ public class airlineUI{
 		String sql = "";
 		String ca = "";
 		String cb = "";
+		int i = 0;
 		System.out.println("---Find all route menu---");
 		try{
 			System.out.println("Please enter the following");
@@ -690,7 +697,59 @@ public class airlineUI{
 			}
 			
 			System.out.println("Non-direct routes:\n");
-			
+		
+			sql = "SELECT * FROM flight WHERE departure_city = '" + ca + "' AND arrival_city != '" + cb +"'";
+			rs = stmt.executeQuery(sql);
+			while(rs.next()){
+				String aCity = rs.getString("arrival_city");
+				String dTime = rs.getString("departure_time");
+				String aTime = rs.getString("arrival_time");
+				String flight_no = rs.getString("flight_number");
+				String schedule = rs.getString("weekely_schedule");
+				sql = "SELECT * FROM flight WHERE departure_city = '" + aCity + "' AND arrival_city = '" + cb +"'";
+				ResultSet rs1 = stmt.executeQuery(sql);
+				while(rs1.next()){
+					String flight_no2 = rs1.getString("flight_number");
+					String aTime2 = rs1.getString("arrival_time");
+					String dTime2 = rs1.getString("departure_time");
+					String schedule2 = rs1.getString("weekely_schedule");
+					
+					int f1arrival_time = Integer.parseInt(aTime);
+					int f2departure_time = Integer.parseInt(dTime2);
+					if(f1arrival_time >= 100){
+						if(f1arrival_time < f2departure_time - 100){}
+						else{
+							continue;
+						}
+					}
+					else{
+						f1arrival_time = f1arrival_time + 2400;
+						if(f1arrival_time > f2departure_time - 100){}
+						else{
+							continue;
+						}
+					}
+					String[] days = schedule.split("-");
+					boolean sameday = false;
+					int j = 0;
+					while(sameday != true && j < days.length){
+						if(schedule2.contains(days[j])){
+							sameday = true;
+						}
+					}
+					if(sameday == false){
+						continue;
+					}
+					System.out.println("Flight no: "+flight_no);
+					System.out.println("Departs " + ca + " at " + dTime);
+					System.out.println("Arrives at " + aCity + " at " + aTime + "\n");
+					System.out.println("Flight no: "+flight_no2);
+					System.out.println("Departs " + aCity + " at " + dTime2);
+					System.out.println("Arrives at " + cb + " at " + aTime2 + "\n");
+					System.out.print("\n");
+					
+				}
+			}
 			
 			
 		}catch(SQLException se){
