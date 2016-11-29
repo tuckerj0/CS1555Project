@@ -440,7 +440,7 @@ public class airlineUI{
 				showReservationInfo();
 			}
 			else if(userInput == 10){
-				
+				buyTicket();
 			}
 			else if(userInput == 11){
 				try{
@@ -1302,7 +1302,37 @@ public class airlineUI{
 			e.printStackTrace();
 		}
 	}
-	
+	public static void buyTicket(){
+		Scanner scanner = new Scanner(System.in);
+		String r_no;
+		String sql;
+		System.out.println("---Buy Ticket---");
+		try{
+			System.out.println("Reservation number: ");
+			r_no = scanner.nextLine();
+			
+			sql = "SELECT ticketed FROM reservation WHERE reservation_number = '" +r_no+ "'";
+			ResultSet rs = stmt.executeQuery(sql);
+			if(rs.next()){
+				int ticketed = rs.getInt("ticketed");
+				if(ticketed == 0){
+					sql = "UPDATE reservation SET ticketed = 1 WHERE reservation_number = '" +r_no+ "'";
+					int succcess = stmt.executeUpdate(sql);
+				}
+				else{
+					System.out.println("Ticket already issued");
+				}
+			}
+			else{
+				System.out.println("Invalid reservation number");
+			}
+			rs.close();
+		}catch(SQLException se){
+			se.printStackTrace();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 	
 	
 	
