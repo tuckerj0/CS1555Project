@@ -230,7 +230,7 @@ public class airlineUI{
 			String city = var[3];
 			String yearFounded = var[4];
 			int year = Integer.parseInt(yearFounded);
-			Statement stmt = conn.createStatement();
+
 			String insertAirline = "INSERT INTO Airline (aid, name, abbreviation, year_founded) VALUES ('"+airlineID+"','" +airlineName+"','"+airlineAbbreviation+"','"+year+"')";
 			stmt.executeUpdate(insertAirline);
 		}
@@ -254,8 +254,7 @@ public class airlineUI{
 			String arrivalTime = var[5];
 			String weeklySchedule = var[6];
 			
-			Statement stmt = conn.createStatement();
-			String insertFlight = "INSERT INTO Flight (flight_number, plane_type, departure_city, arrival_city, departure_time, arrival_time, weekly_schedule) VALUES ('"+flightNumber+"','" +planeType+"','"+departureCity+"','"+arrivalCity+"','"+departureTime+"','"+arrivalTime+"','"+weeklySchedule+"')";
+			String insertFlight = "INSERT INTO Flight (flight_number, plane_type, departure_city, arrival_city, departure_time, arrival_time, weekely_schedule) VALUES ('"+flightNumber+"','" +planeType+"','"+departureCity+"','"+arrivalCity+"','"+departureTime+"','"+arrivalTime+"','"+weeklySchedule+"')";
 			stmt.executeUpdate(insertFlight);
 		}
 		br.close();
@@ -314,7 +313,6 @@ public class airlineUI{
 			lowCost = input.nextInt();
 		//}
 		
-		Statement stmt = conn.createStatement();
 		String updatePrice = "UPDATE PRICE SET high_price =" + highCost + ",low_price=" + lowCost + "WHERE departure_city ='" + departureCity + "' and arrival_city='" + arrivalCity + "' and airline_id='"+airlineID+ "'";
 		stmt.executeUpdate(updatePrice);
 		return 0;
@@ -335,7 +333,6 @@ public class airlineUI{
 			String highPrice = var[3];
 			String lowPrice = var[4];
 			
-			Statement stmt = conn.createStatement();
 			String insertPrice = "INSERT INTO Price (departure_city, arrival_city, airline_id, high_price, low_price) VALUES ('"+departureCity+"','" +arrivalCity+"','"+airlineID+"','"+highPrice+"','"+lowPrice+"')";
 			stmt.executeUpdate(insertPrice);
 		}
@@ -366,7 +363,6 @@ public class airlineUI{
 				System.out.println("Owner id input is incorrect");
 				return 0;
 			}
-			Statement stmt = conn.createStatement();
 			String insertPlane = "INSERT INTO Plane (plane_type, manufacture, plane_capacity, last_service, year, owner_id) VALUES ('"+planeType+"','" +manufacture+"','"+planeCapacity+"','"+lastService+"','"+year+"','"+ownerID+"')";
 			stmt.executeUpdate(insertPlane);
 		}
@@ -386,7 +382,7 @@ public class airlineUI{
 			System.out.println("Flight number input is incorrect.");
 			return 0;
 		}
-		Statement stmt = conn.createStatement();
+
 		String manifesto = "Select salutation, first_name, last_name FROM Customer AS c INNER JOIN Reservation as r ON c.cid = r.cid INNER JOIN Reservation_detail as d ON r.reservation_number = d.reservation_number WHERE Reservation_detail.flight_number = " + flightNumber + " and" + "Reservation_detail.flight_date = " + date + "";
 		ResultSet rs = stmt.executeQuery(manifesto);
 		return 0;
