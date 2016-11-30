@@ -270,52 +270,52 @@ public class airlineUI{
 		int lowCost;
 		
 		System.out.println("Please enter departure city as airport code. E.g. Pittsburgh will be PIT");
-		if (input.next().length() > 3) {
-			System.out.println("Sorry you input too many letters for the airport code. Goodbye.");
-			return 0;
-		}
-		else {
+		//if (input.next().length() > 3) {
+		//	System.out.println("Sorry you input too many letters for the airport code. Goodbye.");
+		//	return 0;
+		//}
+		//else {
 			departureCity = input.next();
-		}
+		//}
 		
 		System.out.println("Please enter arrival city as airport code. E.g. Pittsburgh will be PIT");
-		if (input.next().length() > 3) {
-			System.out.println("Sorry you input too many letters for the airport code. Goodbye.");
-			return 0;
-		}
-		else {
+		//if (input.next().length() > 3) {
+		//	System.out.println("Sorry you input too many letters for the airport code. Goodbye.");
+		//	return 0;
+		//}
+		//else {
 			arrivalCity = input.next();
-		}
+		//}
 		
 		System.out.println("Please enter airline ID number. The number should not be more than three numbers");
-		if (input.next().length() > 3) {
-			System.out.println("Sorry you input too many numbers for the airline ID. Goodbye.");
-			return 0;
-		}
-		else {
+		//if (input.next().length() > 3) {
+		//	System.out.println("Sorry you input too many numbers for the airline ID. Goodbye.");
+		//	return 0;
+		//}
+		//else {
 			airlineID = input.next();
-		}
+		//}
 		
 		System.out.println("Please enter the high cost for this flight. Input should be a max of 3 digits and rounded to the closest ones place. E.g. $230.10 will be 230");
-		if (input.next().length() > 3) {
-			System.out.println("Sorry you inputt too many numbers for the High Cost. Goodbye.");
-			return 0;
-		}
-		else {
+		//if (input.next().length() > 3) {
+		//	System.out.println("Sorry you inputt too many numbers for the High Cost. Goodbye.");
+		//	return 0;
+		//}
+		//else {
 			highCost = input.nextInt();
-		}
+		//}
 		
 		System.out.println("Please enter the low cost for this flight. Input should be a max of 3 digits and rounded to the closest ones place. E.g. $230.10 will be 230");
-		if (input.next().length() > 3) {
-			System.out.println("Sorry you input too many numbers for the airline ID. Goodbye.");
-			return 0;
-		}
-		else {
+		//if (input.next().length() > 3) {
+		//	System.out.println("Sorry you input too many numbers for the airline ID. Goodbye.");
+		//	return 0;
+		//}
+		//else {
 			lowCost = input.nextInt();
-		}
+		//}
 		
 		Statement stmt = conn.createStatement();
-		String updatePrice = "UPDATE PRICE SET high_cost =" + highCost + ",low_cost=" + lowCost + "WHERE departure_city ='" + departureCity + "' and arrival_city='" + arrivalCity + "' and airline_id='"+airlineID+ "'";
+		String updatePrice = "UPDATE PRICE SET high_price =" + highCost + ",low_price=" + lowCost + "WHERE departure_city ='" + departureCity + "' and arrival_city='" + arrivalCity + "' and airline_id='"+airlineID+ "'";
 		stmt.executeUpdate(updatePrice);
 		return 0;
 	}
