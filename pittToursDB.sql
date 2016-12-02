@@ -126,6 +126,30 @@ from timeInfo;
 END;
 /
 
+--adjustTicket 
+
+create or replace trigger adjustTicket
+after update 
+on Price
+for each row
+declare 
+cTime date;
+new_price int;
+begin
+select *
+into cTime
+from timeInfo;
+	update reservation
+	set cost = :new.low_price
+	where :new.departure_city = start_city and :new.arrival_city = end_city and ctime != reservation_date and ticketed = 0;
+	update reservation
+	set cost = :new.high_price
+	where :new.departure_city = start_city and :new.arrival_city = end_city and ctime = reservation_date and ticketed = 0;
+END; 
+/
+
+--Above this line works
+--Below this line needs replaced 
 --procedure
 create or replace function biggerPlane (plane_capacity in int) return char (4)
 as
@@ -150,19 +174,6 @@ end;
 /
 
 -- function
-
-create or replace trigger adjustTicket
-after update Price
-for each row
-begin
-update Reservation
-if (Reservation.reservation_date = Date.c_date) {
-reservation.cost := Reservation.cost + (Price.high_price - new.high_price);
-}
-else {
-reservation.cost := Reservation.cost + (Price.low_price - new.low_price);
-}
-END; / 
 
 --planeUpdate trigger
  
