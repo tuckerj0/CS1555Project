@@ -41,7 +41,8 @@ public class airlineUI{
 			System.out.println("\nWhich interface would you like to access?");
 			System.out.println("1. Administrator Interface");
 			System.out.println("2. Customer Interface");
-			System.out.println("3. Exit");
+			System.out.println("3. Stress test");
+			System.out.println("4. Exit");
 			choice = scanner.nextInt();
 			if(choice == 1){
 				adminInterface();
@@ -49,7 +50,10 @@ public class airlineUI{
 			else if(choice == 2){
 				userInterface();
 			}
-			else if(choice == 3){
+			else if(choice == 4){
+				stressTest();
+			}
+			else if(choice == 4){
 				try{
 					if(stmt!=null)
             			stmt.close();
@@ -67,6 +71,9 @@ public class airlineUI{
 				System.out.println("Please enter a valid input.");
 			}
 		}
+	}
+	public static void stressTest(){
+		
 	}
 	public static void adminInterface(){
 		Scanner scan = new Scanner(System.in);
@@ -1306,6 +1313,4 @@ public class airlineUI{
 			e.printStackTrace();
 		}
 	}
-	
-	
 }
