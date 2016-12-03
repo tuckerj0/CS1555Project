@@ -1215,4 +1215,3 @@ insert into reservation values('349', '000000097', '723', '0000000000059238', to
 insert into reservation_detail values('349', '027', to_date('12/2/2016', 'mm/dd/yyyy'), 1);
 insert into reservation values('350', '000000098', '606', '0000000000026286', to_date('7/6/2016', 'mm/dd/yyyy'), '1', 'LAX', 'DCA');
 insert into reservation_detail values('350', '004', to_date('12/4/2016', 'mm/dd/yyyy'), 1);
-
