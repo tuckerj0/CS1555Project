@@ -409,34 +409,188 @@ public class airlineUI{
 			System.out.println("11. Exit\n");
 			int userInput = scanner.nextInt();
 			if(userInput == 1){
-				addCustomer();
+				boolean correct = true;
+				boolean verify = true;
+				String salutation = "", 
+						fname = "", 
+						lname = "", 
+						street = "", 
+						city= "", 
+						state = "", 
+						pn = "", 
+						email = "", 
+						ccn= "", 
+						cced= "", 
+						cced2 = "";
+				String sql;
+				try{
+					while(correct){
+						System.out.println("----Add Customer----");
+						System.out.println("Please enter the following information.");
+						while (verify){
+							System.out.println("Salutation (mr./mrs.): ");
+							salutation = scanner.nextLine();
+							System.out.println("First name: ");
+							fname = scanner.nextLine();
+							System.out.println("Last name: ");
+							lname = scanner.nextLine();
+							sql = "SELECT first_name, last_name FROM customer WHERE first_name = '"+fname+"' AND last_name = '" +lname +"'";
+							ResultSet rs = stmt.executeQuery(sql);
+							if(rs.next() == true){
+								System.out.println("A customer by this name already exists.");
+								System.out.println("Please eneter a new name.");
+							}
+							else{
+								verify = false;
+							}
+							rs.close();
+						}
+						verify = true;
+						
+						System.out.println("Address Street: ");
+						street = scanner.nextLine();
+						System.out.println("Address city: ");
+						city = scanner.nextLine();
+						System.out.println("State(abbv): ");
+						state = scanner.nextLine();
+						while(verify){
+							System.out.println("Phone number (10 digit number): ");
+							pn = scanner.nextLine();
+							if(pn.length() == 10){
+								verify = false;
+							}
+							else{
+								System.out.println("Phone number not valid.");
+							}
+						}
+						verify = true;
+						while(verify){
+							System.out.println("Email address(maximum of 30 characters): ");
+							email = scanner.nextLine();
+							if(email.length() <= 30){
+								verify = false;
+							}
+							else{
+								System.out.println("Email address not valid.");
+							}
+						}
+						verify = true;
+						while(verify){
+							System.out.println("Credit card number (16 digit number): ");
+							ccn = scanner.nextLine();
+							if(ccn.length() == 16){
+								verify = false;
+							}
+							else{
+								System.out.println("Credit card number not valid.");
+							}
+						}
+						System.out.println("Credit card expirtion date (enter as mm/dd/yyyy): ");
+						cced = scanner.nextLine();
+						cced2 = "to_date('"+cced+"', 'mm/dd/yyyy')";
+						System.out.println("Adding customer to system...");
+						correct = false;
+					}
+					sql = "SELECT MAX(cid) as maxid FROM customer";
+					ResultSet rs = stmt.executeQuery(sql);
+					
+					int cid = -1;
+					int ffm = 0;
+					if(rs.next()){
+						cid  = rs.getInt("maxid");
+						cid++;
+						System.out.println(""+cid);
+					}
+					else{
+						System.out.println("error adding customer");
+					}
+					if(cid != -1){
+						addCustomer(cid, salutation, fname, lname, ccn, cced2, street, city, state, pn, email, ffm);
+					}
+				}catch(SQLException se){
+					se.printStackTrace();
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 			}
 			else if(userInput == 2){
-				showCustomer();
+				String fname;
+				String lname;
+				System.out.println("---Show Customer---");
+				System.out.println("First name: ");
+				fname = scanner.nextLine();
+				System.out.println("Last name: ");
+				lname = scanner.nextLine();
+				showCustomer(fname, lname);
 			}
 			else if(userInput == 3){
-				findPrice();
+				System.out.println("---Find flight price menu---");
+				System.out.println("Please enter the following");
+				System.out.println("Departure city (abbv.): ");
+				String ca = scanner.nextLine();
+				System.out.println("Arrival city (abbv.): ");
+				String cb = scanner.nextLine();
+				findPrice(ca, cb);
 			}
 			else if(userInput == 4){
-				findRoutes();
+				System.out.println("---Find all route menu---");
+				System.out.println("Please enter the following");
+				System.out.println("Departure city (abbv.): ");
+				String ca = scanner.nextLine();
+				System.out.println("Arrival city (abbv.): ");
+				String cb = scanner.nextLine();
+				findRoutes(ca, cb);
 			}
 			else if(userInput == 5){
-				findRoutesByAirline();
+				System.out.println("---Find all route by airline menu---");
+				System.out.println("Please enter the following");
+				System.out.println("Airline name: ");
+				String aln = scanner.nextLine();
+				System.out.println("Departure city (abbv.): ");
+				String ca = scanner.nextLine();
+				System.out.println("Arrival city (abbv.): ");
+				String cb = scanner.nextLine();
+			
+				findRoutesByAirline(ca, cb,aln);
 			}
 			else if(userInput == 6){
-				findRoutesWithSeats();
+				System.out.println("---Find all route with seats by date---");
+				System.out.println("Please enter the following");
+				System.out.println("Departure city (abbv.): ");
+				String ca = scanner.nextLine();
+				System.out.println("Arrival city (abbv.): ");
+				String cb = scanner.nextLine();
+				System.out.println("Date in format mm/dd/yyyy: ");
+				String date = scanner.nextLine();
+				findRoutesWithSeats(ca, cb, date);
 			}
 			else if(userInput == 7){
-				findRoutesWithSeatsByAirline();
+				System.out.println("---Find all route with seats by date---");
+				System.out.println("Please enter the following");
+				System.out.println("Airline name: ");
+				String aln = scanner.nextLine();
+				System.out.println("Departure city (abbv.): ");
+				String ca = scanner.nextLine();
+				System.out.println("Arrival city (abbv.): ");
+				String cb = scanner.nextLine();
+				System.out.println("Date in format mm/dd/yyyy: ");
+				String date = scanner.nextLine();
+				findRoutesWithSeatsByAirline(ca, cb, date, aln);
 			}
 			else if(userInput == 8){
 				
 			}
 			else if(userInput == 9){
-				showReservationInfo();
+				System.out.println("---Show Reservation Info---");
+				System.out.println("Reservation number: ");
+				String r_no = scanner.nextLine();
+				showReservationInfo(r_no);
 			}
 			else if(userInput == 10){
-				buyTicket();
+				System.out.println("---Buy Ticket---");
+				System.out.println("Reservation number: ");
+				String r_no = scanner.nextLine();
+				buyTicket(r_no);
 			}
 			else if(userInput == 11){
 				try{
@@ -457,110 +611,13 @@ public class airlineUI{
 			}
 		}
 	}
-	public static void addCustomer(){
-		Scanner scanner = new Scanner(System.in);
-		boolean correct = true;
-		boolean verify = true;
-		String salutation = "", 
-				fname = "", 
-				lname = "", 
-				street = "", 
-				city= "", 
-				state = "", 
-				pn = "", 
-				email = "", 
-				ccn= "", 
-				cced= "", 
-				cced2 = "";
-		String sql;
+	public static void addCustomer(int cid, String salutation, String fname, String lname, String ccn, String cced2, String street, String city, String state, String pn, String email, int ffm){
 		try{
-			while(correct){
-				System.out.println("----Add Customer----");
-				System.out.println("Please enter the following information.");
-				while (verify){
-					System.out.println("Salutation (mr./mrs.): ");
-					salutation = scanner.nextLine();
-					System.out.println("First name: ");
-					fname = scanner.nextLine();
-					System.out.println("Last name: ");
-					lname = scanner.nextLine();
-					sql = "SELECT first_name, last_name FROM customer WHERE first_name = '"+fname+"' AND last_name = '" +lname +"'";
-					ResultSet rs = stmt.executeQuery(sql);
-					if(rs.next() == true){
-						System.out.println("A customer by this name already exists.");
-						System.out.println("Please eneter a new name.");
-					}
-					else{
-						verify = false;
-					}
-					rs.close();
-				}
-				verify = true;
-				
-				System.out.println("Address Street: ");
-				street = scanner.nextLine();
-				System.out.println("Address city: ");
-				city = scanner.nextLine();
-				System.out.println("State(abbv): ");
-				state = scanner.nextLine();
-				while(verify){
-					System.out.println("Phone number (10 digit number): ");
-					pn = scanner.nextLine();
-					if(pn.length() == 10){
-						verify = false;
-					}
-					else{
-						System.out.println("Phone number not valid.");
-					}
-				}
-				verify = true;
-				while(verify){
-					System.out.println("Email address(maximum of 30 characters): ");
-					email = scanner.nextLine();
-					if(email.length() <= 30){
-						verify = false;
-					}
-					else{
-						System.out.println("Email address not valid.");
-					}
-				}
-				verify = true;
-				while(verify){
-					System.out.println("Credit card number (16 digit number): ");
-					ccn = scanner.nextLine();
-					if(ccn.length() == 16){
-						verify = false;
-					}
-					else{
-						System.out.println("Credit card number not valid.");
-					}
-				}
-				System.out.println("Credit card expirtion date (enter as mm/dd/yyyy): ");
-				cced = scanner.nextLine();
-				cced2 = "to_date('"+cced+"', 'mm/dd/yyyy')";
-				System.out.println("Adding customer to system...");
-				correct = false;
-			}
-			sql = "SELECT MAX(cid) as maxid FROM customer";
-			ResultSet rs = stmt.executeQuery(sql);
-			
-			int cid = -1;
-			int ffm = 0;
-			if(rs.next()){
-				cid  = rs.getInt("maxid");
-				cid++;
-				System.out.println(""+cid);
-			}
-			else{
-				System.out.println("error adding customer");
-			}
-			if(cid != -1){
-				sql = "insert into customer values('"+cid+"', '"+salutation+"', '"+fname+"', '"+lname+"', '"+ccn+"', "+cced2+", '"+street+"', '"+
-									city + "', '"+state+"', '"+pn+"', '"+email+"', '"+ffm+"')";
-				stmt.executeUpdate(sql);
-				System.out.println("Success!");
-				System.out.println("Your customer ID is " + cid);
-			}
+			String sql = "insert into customer values('"+cid+"', '"+salutation+"', '"+fname+"', '"+lname+"', '"+ccn+"', "+cced2+", '"+street+"', '"+
+								city + "', '"+state+"', '"+pn+"', '"+email+"', '"+ffm+"')";
+			stmt.executeUpdate(sql);
+			System.out.println("Success!");
+			System.out.println("Your customer ID is " + cid);
 		}catch(SQLException se){
 			se.printStackTrace();
 		}catch(Exception e){
@@ -568,17 +625,9 @@ public class airlineUI{
 		}
 		return;
 	}
-	public static void showCustomer(){
-		Scanner scanner = new Scanner(System.in);
-		String fname;
-		String lname;
+	public static void showCustomer(String fname, String lname){
 		String sql;
-		System.out.println("---Show Customer---");
 		try{
-			System.out.println("First name: ");
-			fname = scanner.nextLine();
-			System.out.println("Last name: ");
-			lname = scanner.nextLine();
 			sql = "SELECT * FROM customer WHERE first_name = '"+fname+"' AND last_name = '" +lname +"'";
 			ResultSet rs = stmt.executeQuery(sql);
 			
@@ -602,19 +651,9 @@ public class airlineUI{
 			e.printStackTrace();
 		}
 	}
-	public static void findPrice(){
-		Scanner scanner = new Scanner(System.in);
+	public static void findPrice(String ca, String cb){
 		String sql = "";
-		String ca = "";
-		String cb = "";
-		System.out.println("---Find flight price menu---");
 		try{
-			System.out.println("Please enter the following");
-			System.out.println("Departure city (abbv.): ");
-			ca = scanner.nextLine();
-			System.out.println("Arrival city (abbv.): ");
-			cb = scanner.nextLine();
-			
 			sql = "SELECT high_price, low_price FROM price WHERE departure_city = '" + ca + "' AND arrival_city = '" + cb +"'";
 			ResultSet rs = stmt.executeQuery(sql);
 			boolean r = false;
@@ -663,19 +702,10 @@ public class airlineUI{
 			e.printStackTrace();
 		}
 	}
-	public static void findRoutes(){
-		Scanner scanner = new Scanner(System.in);
+	public static void findRoutes(String ca, String cb){
 		String sql = "";
-		String ca = "";
-		String cb = "";
 		int i = 0;
-		System.out.println("---Find all route by airline menu---");
 		try{
-			System.out.println("Please enter the following");
-			System.out.println("Departure city (abbv.): ");
-			ca = scanner.nextLine();
-			System.out.println("Arrival city (abbv.): ");
-			cb = scanner.nextLine();
 			sql = "SELECT * FROM flight WHERE departure_city = '" + ca + "' AND arrival_city = '" + cb +"'";
 			ResultSet rs = stmt.executeQuery(sql);
 			System.out.println("Direct routes: \n");
@@ -751,24 +781,11 @@ public class airlineUI{
 			e.printStackTrace();
 		}
 	}
-	public static void findRoutesByAirline(){
-		Scanner scanner = new Scanner(System.in);
+	public static void findRoutesByAirline(String ca, String cb, String aln){
 		String sql = "";
-		String ca = "";
-		String cb = "";
-		String aln = "";
 		String aid = "";
 		int i = 0;
-		System.out.println("---Find all route menu---");
 		try{
-			System.out.println("Please enter the following");
-			System.out.println("Airline name: ");
-			aln = scanner.nextLine();
-			System.out.println("Departure city (abbv.): ");
-			ca = scanner.nextLine();
-			System.out.println("Arrival city (abbv.): ");
-			cb = scanner.nextLine();
-			
 			sql = "SELECT aid FROM airline WHERE name = '" + aln+ "'";
 			ResultSet rs = stmt.executeQuery(sql);
 			if(rs.next()){
@@ -778,7 +795,6 @@ public class airlineUI{
 				System.out.println("Airline not found. Returning to menu");
 				return;
 			}
-			
 			
 			sql = "SELECT * FROM flight WHERE departure_city = '" + ca + "' AND arrival_city = '" + cb +"' AND airline_id = '"+aid+"'";
 			rs = stmt.executeQuery(sql);
@@ -855,22 +871,10 @@ public class airlineUI{
 			e.printStackTrace();
 		}
 	}
-	public static void findRoutesWithSeats(){
-		Scanner scanner = new Scanner(System.in);
+	public static void findRoutesWithSeats(String ca, String cb, String date){
 		String sql = "";
-		String ca = "";
-		String cb = "";
-		String date = "";
 		int i = 0;
-		System.out.println("---Find all route with seats by date---");
 		try{
-			System.out.println("Please enter the following");
-			System.out.println("Departure city (abbv.): ");
-			ca = scanner.nextLine();
-			System.out.println("Arrival city (abbv.): ");
-			cb = scanner.nextLine();
-			System.out.println("Date in format mm/dd/yyyy: ");
-			date = scanner.nextLine();
 			
 			sql = "SELECT * FROM flight WHERE departure_city = '" + ca + "' AND arrival_city = '" + cb +"'";
 			ResultSet rs = stmt.executeQuery(sql);
@@ -1055,27 +1059,11 @@ public class airlineUI{
 		}
 	}
 	
-	public static void findRoutesWithSeatsByAirline(){
-		Scanner scanner = new Scanner(System.in);
+	public static void findRoutesWithSeatsByAirline(String ca, String cb, String date, String aln){
 		String sql = "";
-		String ca = "";
-		String cb = "";
-		String date = "";
-		String aln = "";
 		String aid = "";
 		int i = 0;
-		System.out.println("---Find all route with seats by date---");
 		try{
-			System.out.println("Please enter the following");
-			System.out.println("Airline name: ");
-			aln = scanner.nextLine();
-			System.out.println("Departure city (abbv.): ");
-			ca = scanner.nextLine();
-			System.out.println("Arrival city (abbv.): ");
-			cb = scanner.nextLine();
-			System.out.println("Date in format mm/dd/yyyy: ");
-			date = scanner.nextLine();
-			
 			sql = "SELECT aid FROM airline WHERE name = '" + aln+ "'";
 			ResultSet rs = stmt.executeQuery(sql);
 			if(rs.next()){
@@ -1269,14 +1257,9 @@ public class airlineUI{
 		}
 	}
 	
-	public static void showReservationInfo(){
-		Scanner scanner = new Scanner(System.in);
-		String r_no;
+	public static void showReservationInfo(String r_no){
 		String sql;
-		System.out.println("---Show Reservation Info---");
 		try{
-			System.out.println("Reservation number: ");
-			r_no = scanner.nextLine();
 			sql = "SELECT * FROM reservation_detail WHERE  reservation_number = '" +r_no +"'";
 			ResultSet rs = stmt.executeQuery(sql);
 			boolean found = false;
@@ -1298,15 +1281,9 @@ public class airlineUI{
 			e.printStackTrace();
 		}
 	}
-	public static void buyTicket(){
-		Scanner scanner = new Scanner(System.in);
-		String r_no;
+	public static void buyTicket(String r_no){
 		String sql;
-		System.out.println("---Buy Ticket---");
 		try{
-			System.out.println("Reservation number: ");
-			r_no = scanner.nextLine();
-			
 			sql = "SELECT ticketed FROM reservation WHERE reservation_number = '" +r_no+ "'";
 			ResultSet rs = stmt.executeQuery(sql);
 			if(rs.next()){
