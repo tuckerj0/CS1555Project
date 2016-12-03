@@ -50,7 +50,7 @@ public class airlineUI{
 			else if(choice == 2){
 				userInterface();
 			}
-			else if(choice == 4){
+			else if(choice == 3){
 				stressTest();
 			}
 			else if(choice == 4){
@@ -73,7 +73,57 @@ public class airlineUI{
 		}
 	}
 	public static void stressTest(){
+		Scanner scanner = new Scanner(System.in);
+		PrintStream console = System.out;
+		System.out.println("--------Stress Test--------");
+		System.out.println("--Stress test command can only be run once");
+		System.out.println("--Prior to running, run pittToursData.sql");
+		System.out.println("--You must purge the database and rerun pittToursData.sql to run a second time");
+		System.out.println("--Output will be redirected to stressTestOutput.txt");
+		System.out.println("--SQL errors will print to console");
+		System.out.println("Input 1 to continue. Any other input will return to menu.");
+		int c = scanner.nextInt();
+		if(c != 1){
+			return;
+		}
+		PrintStream o = null;
+		FileOutputStream fout = null;
+		File f = new File("stressTestOutput.txt");
+		try{
+			f.createNewFile();
+		}catch(IOException e){}
+		try{
+			fout = new  FileOutputStream(f);
+		}catch(FileNotFoundException e){}
+		o = new PrintStream(fout);
+		System.setOut(o);
+		//Stess test admin Interface
+		System.out.println("-------------------START-------------------");
+		System.out.println("---------------------------------------------");
+		System.out.println("---------------------------------------------");
+		System.out.println("---------------ADMIN INTERFACE---------------");
+		System.out.println("---------------------------------------------");
+		System.out.println("---------------------------------------------");
 		
+		//Stress test customer Interface
+		System.out.println("------------------------------------------------");
+		System.out.println("------------------------------------------------");
+		System.out.println("---------------CUSTOMER INTERFACE---------------");
+		System.out.println("------------------------------------------------");
+		System.out.println("------------------------------------------------");
+		stAddCustomer();	//task 1
+		stShowCustomer();	//task 2
+		stFindPrice();			//task 3
+		stFindRoutes();			//task 4
+		stFindRoutesByAirline();	//task 5
+		//stFindRoutesWithSeats();	//task 6
+		//stFindRoutesByAirlineWithSeats();	//task 7
+				//task 8
+		stShowReservationInfo();	//task 9
+		stBuyTicket();		//task 10
+		System.out.println("-------------------END--------------------");
+		System.setOut(console);
+        System.out.println("Stress test finished");
 	}
 	public static void adminInterface(){
 		Scanner scan = new Scanner(System.in);
@@ -432,6 +482,7 @@ public class airlineUI{
 				String sql;
 				try{
 					while(correct){
+						scanner.nextLine();
 						System.out.println("----Add Customer----");
 						System.out.println("Please enter the following information.");
 						while (verify){
@@ -506,7 +557,6 @@ public class airlineUI{
 					if(rs.next()){
 						cid  = rs.getInt("maxid");
 						cid++;
-						System.out.println(""+cid);
 					}
 					else{
 						System.out.println("error adding customer");
@@ -521,6 +571,7 @@ public class airlineUI{
 				}
 			}
 			else if(userInput == 2){
+				scanner.nextLine();
 				String fname;
 				String lname;
 				System.out.println("---Show Customer---");
@@ -531,6 +582,7 @@ public class airlineUI{
 				showCustomer(fname, lname);
 			}
 			else if(userInput == 3){
+				scanner.nextLine();
 				System.out.println("---Find flight price menu---");
 				System.out.println("Please enter the following");
 				System.out.println("Departure city (abbv.): ");
@@ -540,6 +592,7 @@ public class airlineUI{
 				findPrice(ca, cb);
 			}
 			else if(userInput == 4){
+				scanner.nextLine();
 				System.out.println("---Find all route menu---");
 				System.out.println("Please enter the following");
 				System.out.println("Departure city (abbv.): ");
@@ -549,6 +602,7 @@ public class airlineUI{
 				findRoutes(ca, cb);
 			}
 			else if(userInput == 5){
+				scanner.nextLine();
 				System.out.println("---Find all route by airline menu---");
 				System.out.println("Please enter the following");
 				System.out.println("Airline name: ");
@@ -561,6 +615,7 @@ public class airlineUI{
 				findRoutesByAirline(ca, cb,aln);
 			}
 			else if(userInput == 6){
+				scanner.nextLine();
 				System.out.println("---Find all route with seats by date---");
 				System.out.println("Please enter the following");
 				System.out.println("Departure city (abbv.): ");
@@ -572,6 +627,7 @@ public class airlineUI{
 				findRoutesWithSeats(ca, cb, date);
 			}
 			else if(userInput == 7){
+				scanner.nextLine();
 				System.out.println("---Find all route with seats by date---");
 				System.out.println("Please enter the following");
 				System.out.println("Airline name: ");
@@ -588,12 +644,14 @@ public class airlineUI{
 				
 			}
 			else if(userInput == 9){
+				scanner.nextLine();
 				System.out.println("---Show Reservation Info---");
 				System.out.println("Reservation number: ");
 				String r_no = scanner.nextLine();
 				showReservationInfo(r_no);
 			}
 			else if(userInput == 10){
+				scanner.nextLine();
 				System.out.println("---Buy Ticket---");
 				System.out.println("Reservation number: ");
 				String r_no = scanner.nextLine();
@@ -632,6 +690,115 @@ public class airlineUI{
 		}
 		return;
 	}
+	public static void stAddCustomer(){
+		try{
+			System.out.println("--------------------------------");
+			System.out.println("----STRESS TEST ADD CUSTOMER----");
+			System.out.println("--------------------------------");
+			String sql = "SELECT MAX(cid) as maxid FROM customer";
+			ResultSet rs = stmt.executeQuery(sql);			
+			int cid = -1;
+			if(rs.next()){
+				cid  = rs.getInt("maxid");
+				cid++;
+			}
+			sql = "Select count(cid) as cno FROM customer";
+			rs = stmt.executeQuery(sql);	
+			int cno = -1;
+			if(rs.next()){
+				cno  = rs.getInt("cno");
+			}
+			System.out.println("Current customer count: " + cno);
+			System.out.println("Adding 10 customers...");
+			addCustomer(cid++, "mr", "john", "ham", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "johny", "hamma", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "sam", "something", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "tomas", "ahh", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "trav", "some", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "ell", "boon", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "amy", "tan", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "eileen", "shaw", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "sam", "ham", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "leslie", "dean", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			rs = stmt.executeQuery(sql);
+			int newCno = -1;
+			if(rs.next()){
+				newCno  = rs.getInt("cno");
+			}
+			System.out.println("Current customer count: " + newCno);
+			//added 10 customers
+			
+			System.out.println("Adding 10 more customers...");
+			addCustomer(cid++, "mr", "eli", "ham", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "junior", "hamma", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "juno", "something", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "tommy", "ahh", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "travis", "some", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "ellenor", "boon", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "amanda", "tan", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "lily", "shaw", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "samantha", "ham", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "lord", "dean", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			rs = stmt.executeQuery(sql);	
+			if(rs.next()){
+				cno  = rs.getInt("cno");
+			}
+			System.out.println("Current customer count after adding 20 total: " + cno);
+			System.out.println("Adding 10 more customers...");
+			addCustomer(cid++, "mr", "job", "ham", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "george", "hamma", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "jeb", "something", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "tyler", "ahh", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "jake", "some", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "tammy", "boon", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "yolanda", "tan", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "donna", "shaw", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "carly", "ham", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "olivia", "dean", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			rs = stmt.executeQuery(sql);	
+			if(rs.next()){
+				cno  = rs.getInt("cno");
+			}
+			System.out.println("Current customer count after adding 30 total: " + cno);
+			System.out.println("Adding 10 more customers...");
+			addCustomer(cid++, "mr", "jeff", "ham", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "georgy", "hond", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "stan", "something", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "bill", "ahh", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "billy", "some", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "tanya", "boon", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "molly", "tan", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "staci", "shaw", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "taylor", "ham", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "liv", "dean", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			rs = stmt.executeQuery(sql);	
+			if(rs.next()){
+				cno  = rs.getInt("cno");
+			}
+			System.out.println("Current customer count after adding 40 total: " + cno);
+			System.out.println("Adding 10 more customers...");
+			addCustomer(cid++, "mr", "jacob", "ham", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "gene", "hamma", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "jeffery", "something", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "tye", "ahh", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mr", "samuel", "some", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "liz", "boon", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "elizabeth", "tan", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "megan", "shaw", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "jacky", "ham", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			addCustomer(cid++, "mrs", "karly", "dean", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			rs = stmt.executeQuery(sql);	
+			if(rs.next()){
+				cno  = rs.getInt("cno");
+			}
+			System.out.println("Current customer count after adding 50 total: " + cno);
+			
+		}catch(SQLException se){
+			se.printStackTrace();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 	public static void showCustomer(String fname, String lname){
 		String sql;
 		try{
@@ -658,23 +825,66 @@ public class airlineUI{
 			e.printStackTrace();
 		}
 	}
+	public static void stShowCustomer(){
+		System.out.println("---------------------------------");
+		System.out.println("----STRESS TEST SHOW CUSTOMER----");
+		System.out.println("---------------------------------");
+		System.out.println("Should be found:");
+		showCustomer("john","ham");
+		showCustomer("johny","hamma");
+		showCustomer("sam","something");
+		showCustomer("tomas", "ahh");
+		showCustomer("trav", "some");
+		showCustomer("ell", "boon");
+		showCustomer("amy", "tan");
+		showCustomer("eileen", "shaw");
+		showCustomer("sam", "ham");
+		showCustomer("leslie", "dean");
+		
+		showCustomer("eli", "ham");
+		showCustomer("junior", "hamma");
+		showCustomer("juno", "something");
+		showCustomer("tommy", "ahh");
+		showCustomer("travis", "some");
+		showCustomer("ellenor", "boon");
+		showCustomer("amanda", "tan");
+		showCustomer("lily", "shaw");
+		showCustomer("samantha", "ham");
+		showCustomer("lord", "dean");
+		
+		showCustomer("job", "ham");
+		showCustomer("george", "hamma");
+		showCustomer("jeb", "something");
+		showCustomer("tyler", "ahh");
+		showCustomer("jake", "some");
+		showCustomer("tammy", "boon");
+		showCustomer("yolanda", "tan");
+		showCustomer("donna", "shaw");
+		showCustomer("carly", "ham");
+		showCustomer("olivia", "dean");
+		
+		System.out.println("Should not be found:");
+		showCustomer("not","found");
+		showCustomer("some","guy");
+		showCustomer("some","girl");
+		showCustomer("doesnot","exist");
+		showCustomer("aaaaaa","notaname");
+	}
 	public static void findPrice(String ca, String cb){
 		String sql = "";
 		try{
-			sql = "SELECT high_price, low_price FROM price WHERE departure_city = '" + ca + "' AND arrival_city = '" + cb +"'";
+			sql = "SELECT * FROM price WHERE departure_city = '" + ca + "' AND arrival_city = '" + cb +"'";
 			ResultSet rs = stmt.executeQuery(sql);
 			boolean r = false;
 			int AtoBhp = 0, AtoBlp = 0;
-			if(rs.next()){
+			int al;
+			while(rs.next()){
 				AtoBhp  = rs.getInt("high_price");
 				AtoBlp  = rs.getInt("low_price");
 				System.out.println("Flight from "+ca+" to " + cb+ ":");
 				System.out.println("High price: " +AtoBhp);
 				System.out.println("Low price: " +AtoBlp);
 				r = true;
-			}
-			else{
-				System.out.println("Flight from "+ca+" to " + cb+ " not available");
 			}
 			sql = "SELECT high_price, low_price FROM price WHERE departure_city = '" + cb + "' AND arrival_city = '" + ca +"'";
 			ResultSet rs1 = stmt.executeQuery(sql);
@@ -708,6 +918,22 @@ public class airlineUI{
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	public static void stFindPrice(){
+		System.out.println("------------------------------");
+		System.out.println("----STRESS TEST FIND PRICE----");
+		System.out.println("------------------------------");
+		findPrice("PIT", "DCA");
+		findPrice("PIT", "SFA");
+		findPrice("PIT", "ATL");
+		findPrice("JFK", "DCA");
+		findPrice("SFA", "PIT");
+		findPrice("PIT", "DCA");
+		findPrice("JFK", "SFA");
+		findPrice("ATL", "LAX");
+		findPrice("DCA", "SFA");
+		findPrice("SFA", "DCA");
+		findPrice("LAX", "DCA");
 	}
 	public static void findRoutes(String ca, String cb){
 		String sql = "";
@@ -744,7 +970,6 @@ public class airlineUI{
 					String aTime2 = rs1.getString("arrival_time");
 					String dTime2 = rs1.getString("departure_time");
 					String schedule2 = rs1.getString("weekely_schedule");
-					
 					int f1arrival_time = Integer.parseInt(aTime);
 					int f2departure_time = Integer.parseInt(dTime2);
 					if(f1arrival_time >= 100){
@@ -763,7 +988,7 @@ public class airlineUI{
 					String[] days = schedule.split("-");
 					boolean sameday = false;
 					int j = 0;
-					while(sameday != true && j < days.length){
+					if(sameday != true && j < days.length){
 						if(schedule2.contains(days[j])){
 							sameday = true;
 						}
@@ -777,7 +1002,6 @@ public class airlineUI{
 					System.out.println("Flight no: "+flight_no2);
 					System.out.println("Departs " + aCity + " at " + dTime2);
 					System.out.println("Arrives at " + cb + " at " + aTime2 + "\n");
-					
 				}
 			}
 			
@@ -787,6 +1011,31 @@ public class airlineUI{
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	public static void stFindRoutes(){
+		System.out.println("-------------------------------");
+		System.out.println("----STRESS TEST FIND ROUTES----");
+		System.out.println("-------------------------------");
+		System.out.println("----PIT to DCA");
+		findRoutes("PIT", "DCA");
+		System.out.println("----PIT to SFA");
+		findRoutes("PIT", "SFA");
+		System.out.println("----PIT to ATL");
+		findRoutes("PIT", "ATL");
+		System.out.println("----JFK to DCA");
+		findRoutes("JFK", "DCA");
+		System.out.println("----SFA to PIT");
+		findRoutes("SFA", "PIT");
+		System.out.println("----JFK to SFA");
+		findRoutes("JFK", "SFA");
+		System.out.println("----ATL to LAX");
+		findRoutes("ATL", "LAX");
+		System.out.println("----DCA to SFA");
+		findRoutes("DCA", "SFA");
+		System.out.println("----SFA to DCA");
+		findRoutes("SFA", "DCA");
+		System.out.println("----LAX to DCA");
+		findRoutes("LAX", "DCA");
 	}
 	public static void findRoutesByAirline(String ca, String cb, String aln){
 		String sql = "";
@@ -853,7 +1102,7 @@ public class airlineUI{
 					String[] days = schedule.split("-");
 					boolean sameday = false;
 					int j = 0;
-					while(sameday != true && j < days.length){
+					if(sameday != true && j < days.length){
 						if(schedule2.contains(days[j])){
 							sameday = true;
 						}
@@ -877,6 +1126,41 @@ public class airlineUI{
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	public static void stFindRoutesByAirline(){
+		System.out.println("------------------------------------------");
+		System.out.println("----STRESS TEST FIND ROUTES By Airline----");
+		System.out.println("------------------------------------------");
+		System.out.println("----PIT to DCA on airline 1");
+		findRoutesByAirline("PIT", "DCA", "1");
+		System.out.println("----PIT to SFA on airline 1");
+		findRoutesByAirline("PIT", "SFA", "1");
+		System.out.println("----PIT to SFA on airline 3");
+		findRoutesByAirline("PIT", "SFA","3");
+		System.out.println("----PIT to ATL on airline 5");
+		findRoutesByAirline("PIT", "ATL", "5");
+		System.out.println("----JFK to DCA on airline 3");
+		findRoutesByAirline("JFK", "DCA", "3");
+		System.out.println("----JFK to DCA on airline 1");
+		findRoutesByAirline("JFK", "DCA", "1");
+		System.out.println("----SFA to PIT on airline 1");
+		findRoutesByAirline("SFA", "PIT", "1");
+		System.out.println("----DCA to PIT on airline 1");
+		findRoutesByAirline("DCA", "PIT", "1");
+		System.out.println("----DCA to PIT on airline 8");
+		findRoutesByAirline("DCA", "PIT", "8");
+		System.out.println("----DCA to PIT on airline 2");
+		findRoutesByAirline("DCA", "PIT", "2");
+		System.out.println("----JFK to SFA on airline 3");
+		findRoutesByAirline("JFK", "SFA", "3");
+		System.out.println("----JFK to SFA on airline 10");
+		findRoutesByAirline("JFK", "SFA", "10");
+		System.out.println("----ATL to LAX on airline 4");
+		findRoutesByAirline("ATL", "LAX", "4");
+		System.out.println("----DCA to SFA on airline 3");
+		findRoutesByAirline("DCA", "SFA", "3");
+		System.out.println("----ATL to DCA on airline 1");
+		findRoutesByAirline("ATL", "DCA", "1");
 	}
 	public static void findRoutesWithSeats(String ca, String cb, String date){
 		String sql = "";
@@ -1006,7 +1290,7 @@ public class airlineUI{
 							String[] days = schedule.split("-");
 							boolean sameday = false;
 							int j = 0;
-							while(sameday != true && j < days.length){
+							if(sameday != true && j < days.length){
 								if(schedule2.contains(days[j])){
 									sameday = true;
 								}
@@ -1204,7 +1488,7 @@ public class airlineUI{
 							String[] days = schedule.split("-");
 							boolean sameday = false;
 							int j = 0;
-							while(sameday != true && j < days.length){
+							if(sameday != true && j < days.length){
 								if(schedule2.contains(days[j])){
 									sameday = true;
 								}
@@ -1288,6 +1572,23 @@ public class airlineUI{
 			e.printStackTrace();
 		}
 	}
+	public static void stShowReservationInfo(){
+		System.out.println("-----------------------------------------");
+		System.out.println("----STRESS TEST SHOW RESERVATION INFO----");
+		System.out.println("-----------------------------------------");
+		for(int i = 50; i < 100; i++){
+			String input = String.valueOf(i);
+			showReservationInfo(input);
+		}
+		for(int i = 300; i < 320; i++){
+			String input = String.valueOf(i);
+			showReservationInfo(input);
+		}
+		System.out.println("None existant reservations will not be found:");
+		showReservationInfo("0");
+		showReservationInfo("-1");
+		showReservationInfo("9999");
+	}
 	public static void buyTicket(String r_no){
 		String sql;
 		try{
@@ -1312,5 +1613,23 @@ public class airlineUI{
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	public static void stBuyTicket(){
+		System.out.println("------------------------------");
+		System.out.println("----STRESS TEST BUY TICKET----");
+		System.out.println("------------------------------");
+		for(int i = 50; i < 100; i++){
+			String input = String.valueOf(i);
+			showReservationInfo(input);
+		}
+		System.out.println("Reservations that have already been ticketed:");
+		for(int i = 300; i < 310; i++){
+			String input = String.valueOf(i);
+			showReservationInfo(input);
+		}
+		System.out.println("None existant reservations will not be found:");
+		showReservationInfo("0");
+		showReservationInfo("-1");
+		showReservationInfo("9999");
 	}
 }
