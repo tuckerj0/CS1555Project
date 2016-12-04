@@ -1180,7 +1180,7 @@ public class airlineUI{
 				sql = "SELECT * FROM reservation_detail WHERE flight_date = " + date + " AND flight_number = '"+ fn +"'";
 				rs1 = stmt2.executeQuery(sql);
 				if(rs1.next()){
-					sql = "Select plane_type FROM flight where flight_number = '" + fn +"'";
+					sql = "Select plane_type FROM flight WHERE flight_number = '" + fn +"'";
 					rs1 = stmt2.executeQuery(sql);
 					String planeType = "";
 					if(rs1.next()){
@@ -1243,7 +1243,7 @@ public class airlineUI{
 					else{
 						continue;
 					}
-					sql = "Select plane_capacity FROM plane plane_type = '" + planeType +"'";
+					sql = "Select plane_capacity FROM plane WHERE plane_type = '" + planeType +"'";
 					rs1 = stmt2.executeQuery(sql);
 					int capacity = 0;
 					if(rs1.next()){
@@ -1352,13 +1352,20 @@ public class airlineUI{
 		System.out.println("------------------------------------------");
 		System.out.println("----STRESS TEST FIND ROUTES WITH SEATS----");
 		System.out.println("------------------------------------------");
+		System.out.println("---PIT to DCA on 11/15/2016");
 		findRoutesWithSeats("PIT","DCA","11/15/2016");
+		System.out.println("---DCA to PIT on 10/15/2016");
 		findRoutesWithSeats("DCA","PIT","10/15/2016");
+		System.out.println("---SFA to DCA on 11/6/2016");
 		findRoutesWithSeats("SFA","DCA","11/6/2016");
+		System.out.println("---SFA to PIT on 11/1/2016");
 		findRoutesWithSeats("SFA","PIT","11/1/2016");
-		findRoutesWithSeats("LAX","DCA","11/1/2016");
+		System.out.println("---PIT to DCA on 11/1/2016");
+		findRoutesWithSeats("PIT","DCA","11/1/2016");
+		System.out.println("---PIT to DCA on 11/14/2016");
 		findRoutesWithSeats("PIT","DCA","11/14/2016");
-		findRoutesWithSeats("DCA","SFA","11/5/2016");
+		System.out.println("---DCA to SFA on 12/4/2016");
+		findRoutesWithSeats("DCA","SFA","12/4/2016");
 	}
 	public static void findRoutesWithSeatsByAirline(String ca, String cb, String date, String aln){
 		String sql = "";
@@ -1453,7 +1460,7 @@ public class airlineUI{
 					else{
 						continue;
 					}
-					sql = "Select plane_capacity FROM plane plane_type = '" + planeType +"'";
+					sql = "Select plane_capacity FROM plane WHERE plane_type = '" + planeType +"'";
 					rs1 = stmt2.executeQuery(sql);
 					int capacity = 0;
 					if(rs1.next()){
@@ -1562,6 +1569,20 @@ public class airlineUI{
 		System.out.println("-----------------------------------------------------");
 		System.out.println("----STRESS TEST FIND ROUTES WITH SEATS BY AIRLINE----");
 		System.out.println("-----------------------------------------------------");
+		System.out.println("---PIT to DCA on 11/15/2016 on airline United Airlines");
+		findRoutesWithSeats("PIT","DCA","11/15/2016","United Airlines");
+		System.out.println("---DCA to PIT on 10/15/2016 on airline Lufthansa");
+		findRoutesWithSeats("DCA","PIT","10/15/2016","Lufthansa");
+		System.out.println("---SFA to DCA on 11/6/2016 on airline United Airlines");
+		findRoutesWithSeats("SFA","DCA","11/6/2016","United Airlines");
+		System.out.println("---SFA to PIT on 11/1/2016 on airline British Airways");
+		findRoutesWithSeats("SFA","PIT","11/1/2016","British Airways");
+		System.out.println("---PIT to DCA on 11/1/2016 on airline United Airlines");
+		findRoutesWithSeats("PIT","DCA","11/1/2016","United Airlines");
+		System.out.println("---PIT to DCA on 11/14/2016 on airline United Airlines");
+		findRoutesWithSeats("PIT","DCA","11/14/2016","United Airlines");
+		System.out.println("---DCA to SFA on 12/4/2016 on airline United Airlines"");
+		findRoutesWithSeats("DCA","SFA","12/4/2016","United Airlines");
 	}
 	
 	public static void showReservationInfo(String r_no){
