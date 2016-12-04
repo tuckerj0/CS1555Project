@@ -116,8 +116,8 @@ public class airlineUI{
 		stFindPrice();			//task 3
 		stFindRoutes();			//task 4
 		stFindRoutesByAirline();	//task 5
-		//stFindRoutesWithSeats();	//task 6
-		//stFindRoutesByAirlineWithSeats();	//task 7
+		stFindRoutesWithSeats();	//task 6
+		stFindRoutesWithSeatsByAirline();	//task 7
 				//task 8
 		stShowReservationInfo();	//task 9
 		stBuyTicket();		//task 10
@@ -611,8 +611,7 @@ public class airlineUI{
 				String ca = scanner.nextLine();
 				System.out.println("Arrival city (abbv.): ");
 				String cb = scanner.nextLine();
-			
-				findRoutesByAirline(ca, cb,aln);
+				findRoutesByAirline(ca, cb, aln);
 			}
 			else if(userInput == 6){
 				scanner.nextLine();
@@ -1131,40 +1130,41 @@ public class airlineUI{
 		System.out.println("------------------------------------------");
 		System.out.println("----STRESS TEST FIND ROUTES By Airline----");
 		System.out.println("------------------------------------------");
-		System.out.println("----PIT to DCA on airline 1");
-		findRoutesByAirline("PIT", "DCA", "1");
-		System.out.println("----PIT to SFA on airline 1");
-		findRoutesByAirline("PIT", "SFA", "1");
-		System.out.println("----PIT to SFA on airline 3");
-		findRoutesByAirline("PIT", "SFA","3");
-		System.out.println("----PIT to ATL on airline 5");
-		findRoutesByAirline("PIT", "ATL", "5");
-		System.out.println("----JFK to DCA on airline 3");
-		findRoutesByAirline("JFK", "DCA", "3");
-		System.out.println("----JFK to DCA on airline 1");
-		findRoutesByAirline("JFK", "DCA", "1");
-		System.out.println("----SFA to PIT on airline 1");
-		findRoutesByAirline("SFA", "PIT", "1");
-		System.out.println("----DCA to PIT on airline 1");
-		findRoutesByAirline("DCA", "PIT", "1");
-		System.out.println("----DCA to PIT on airline 8");
-		findRoutesByAirline("DCA", "PIT", "8");
-		System.out.println("----DCA to PIT on airline 2");
-		findRoutesByAirline("DCA", "PIT", "2");
-		System.out.println("----JFK to SFA on airline 3");
-		findRoutesByAirline("JFK", "SFA", "3");
-		System.out.println("----JFK to SFA on airline 10");
-		findRoutesByAirline("JFK", "SFA", "10");
-		System.out.println("----ATL to LAX on airline 4");
-		findRoutesByAirline("ATL", "LAX", "4");
-		System.out.println("----DCA to SFA on airline 3");
-		findRoutesByAirline("DCA", "SFA", "3");
-		System.out.println("----ATL to DCA on airline 1");
-		findRoutesByAirline("ATL", "DCA", "1");
+		System.out.println("----PIT to DCA on airline United Airlines");
+		findRoutesByAirline("PIT", "DCA", "United Airlines");
+		System.out.println("----PIT to SFA on airline United Airlines");
+		findRoutesByAirline("PIT", "SFA", "United Airlines");
+		System.out.println("----PIT to SFA on airline Delta Air Lines");
+		findRoutesByAirline("PIT", "SFA","Delta Air Lines");
+		System.out.println("----PIT to ATL on airline Western Airlines");
+		findRoutesByAirline("PIT", "ATL", "Western Airlines");
+		System.out.println("----JFK to DCA on airline Delta Air Lines");
+		findRoutesByAirline("JFK", "DCA", "Delta Air Lines");
+		System.out.println("----JFK to DCA on airline United Airlines");
+		findRoutesByAirline("JFK", "DCA", "United Airlines");
+		System.out.println("----SFA to PIT on airline United Airlines");
+		findRoutesByAirline("SFA", "PIT", "United Airlines");
+		System.out.println("----DCA to PIT on airline United Airlines");
+		findRoutesByAirline("DCA", "PIT", "United Airlines");
+		System.out.println("----DCA to PIT on airline American Airlines");
+		findRoutesByAirline("DCA", "PIT", "American Airlines");
+		System.out.println("----DCA to PIT on airline All Nippon Airways");
+		findRoutesByAirline("DCA", "PIT", "All Nippon Airways");
+		System.out.println("----JFK to SFA on airline Delta Air Lines");
+		findRoutesByAirline("JFK", "SFA", "Delta Air Lines");
+		System.out.println("----JFK to SFA on airline Qatar Airways");
+		findRoutesByAirline("JFK", "SFA", "Qatar Airways");
+		System.out.println("----ATL to LAX on airline Belair Airlines");
+		findRoutesByAirline("ATL", "LAX", "Belair Airlines");
+		System.out.println("----DCA to SFA on airline Delta Air Lines");
+		findRoutesByAirline("DCA", "SFA", "Delta Air Lines");
+		System.out.println("----ATL to DCA on airline United Airlines");
+		findRoutesByAirline("ATL", "DCA", "United Airlines");
 	}
 	public static void findRoutesWithSeats(String ca, String cb, String date){
 		String sql = "";
 		int i = 0;
+		date = "to_date('"+date+"','mm/dd/yyyy')";
 		try{
 			
 			sql = "SELECT * FROM flight WHERE departure_city = '" + ca + "' AND arrival_city = '" + cb +"'";
@@ -1172,8 +1172,12 @@ public class airlineUI{
 			ResultSet rs1 = null;
 			System.out.println("Direct routes: \n");
 			while(rs.next()){
+				String dc  = rs.getString("departure_city");
+				String dt  = rs.getString("departure_time");
+				String ac  = rs.getString("arrival_city");
+				String at  = rs.getString("arrival_time");
 				String fn  = rs.getString("flight_number");
-				sql = "SELECT * FROM reservation_detail WHERE flight_date = '" + date + "' AND flight_number = '" + fn +"'";
+				sql = "SELECT * FROM reservation_detail WHERE flight_date = " + date + " AND flight_number = '"+ fn +"'";
 				rs1 = stmt2.executeQuery(sql);
 				if(rs1.next()){
 					sql = "Select plane_type FROM flight where flight_number = '" + fn +"'";
@@ -1185,7 +1189,7 @@ public class airlineUI{
 					else{
 						continue;
 					}
-					sql = "Select plane_capacity FROM plane plane_type = '" + planeType +"'";
+					sql = "Select plane_capacity FROM plane WHERE plane_type = '" + planeType +"'";
 					rs1 = stmt2.executeQuery(sql);
 					int capacity = 0;
 					if(rs1.next()){
@@ -1194,7 +1198,7 @@ public class airlineUI{
 					else{
 						continue;
 					}
-					sql = "Select count(*) as passengerCount FROM reservation_detail WHERE flight_date = '" + date + "' AND flight_number = '" + fn +"'";
+					sql = "Select count(*) as passengerCount FROM reservation_detail WHERE flight_date = " + date + " AND flight_number = '" + fn +"'";
 					rs1 = stmt.executeQuery(sql);
 					int passengerCount = 0;
 					if(rs1.next()){
@@ -1204,10 +1208,6 @@ public class airlineUI{
 						continue;
 					}
 					if(passengerCount < capacity){
-						String dc  = rs.getString("departure_city");
-						String dt  = rs.getString("departure_time");
-						String ac  = rs.getString("arrival_city");
-						String at  = rs.getString("arrival_time");
 						System.out.println("Flight no: "+fn);
 						System.out.println("Departs " + dc + " at " + dt);
 						System.out.println("Arrives at " + ac + " at " + at + "\n");
@@ -1221,17 +1221,20 @@ public class airlineUI{
 				}
 				
 			}
-			
 			System.out.println("Non-direct routes:\n");
 		
 			sql = "SELECT * FROM flight WHERE departure_city = '" + ca + "' AND arrival_city != '" + cb +"'";
 			rs = stmt.executeQuery(sql);
 			while(rs.next()){
 				String fn  = rs.getString("flight_number");
-				sql = "SELECT * FROM reservation_detail WHERE flight_date = '" + date + "' AND flight_number = '" + fn +"'";
+				String aCity = rs.getString("arrival_city");
+				String dTime = rs.getString("departure_time");
+				String aTime = rs.getString("arrival_time");
+				String schedule = rs.getString("weekely_schedule");
+				sql = "SELECT * FROM reservation_detail WHERE flight_date = " + date + " AND flight_number = '" + fn +"'";
 				rs1 = stmt2.executeQuery(sql);
 				if(rs1.next()){
-					sql = "Select plane_type FROM flight where flight_number = '" + fn +"'";
+					sql = "Select plane_type FROM flight WHERE flight_number = '" + fn +"'";
 					rs1 = stmt2.executeQuery(sql);
 					String planeType = "";
 					if(rs1.next()){
@@ -1249,7 +1252,7 @@ public class airlineUI{
 					else{
 						continue;
 					}
-					sql = "Select count(*) as passengerCount FROM reservation_detail WHERE flight_date = '" + date + "' AND flight_number = '" + fn +"'";
+					sql = "Select count(*) as passengerCount FROM reservation_detail WHERE flight_date = " + date + " AND flight_number = '" + fn +"'";
 					rs1 = stmt2.executeQuery(sql);
 					int passengerCount = 0;
 					if(rs1.next()){
@@ -1260,10 +1263,6 @@ public class airlineUI{
 					}
 					if(passengerCount < capacity){
 						ResultSet rs2 = null;
-						String aCity = rs.getString("arrival_city");
-						String dTime = rs.getString("departure_time");
-						String aTime = rs.getString("arrival_time");
-						String schedule = rs.getString("weekely_schedule");
 						sql = "SELECT * FROM flight WHERE departure_city = '" + aCity + "' AND arrival_city = '" + cb +"'";
 						rs2 = stmt3.executeQuery(sql);
 						while(rs2.next()){
@@ -1298,7 +1297,7 @@ public class airlineUI{
 							if(sameday == false){
 								continue;
 							}
-							sql = "Select plane_type FROM flight where flight_number = '" + fn +"'";
+							sql = "Select plane_type FROM flight WHERE flight_number = '" + fn +"'";
 							rs1 = stmt2.executeQuery(sql);
 							planeType = "";
 							if(rs1.next()){
@@ -1307,7 +1306,7 @@ public class airlineUI{
 							else{
 								continue;
 							}
-							sql = "Select plane_capacity FROM plane plane_type = '" + planeType +"'";
+							sql = "Select plane_capacity FROM plane WHERE plane_type = '" + planeType +"'";
 							rs1 = stmt2.executeQuery(sql);
 							int capacity2 = 0;
 							if(rs1.next()){
@@ -1316,7 +1315,7 @@ public class airlineUI{
 							else{
 								continue;
 							}
-							sql = "Select count(*) as passengerCount FROM reservation_detail WHERE flight_date = '" + date + "' AND flight_number = '" + fn +"'";
+							sql = "Select count(*) as passengerCount FROM reservation_detail WHERE flight_date = " + date + " AND flight_number = '" + fn +"'";
 							rs1 = stmt2.executeQuery(sql);
 							int passengerCount2 = 0;
 							if(rs1.next()){
@@ -1349,11 +1348,22 @@ public class airlineUI{
 			e.printStackTrace();
 		}
 	}
-	
+	public static void stFindRoutesWithSeats(){
+		System.out.println("------------------------------------------");
+		System.out.println("----STRESS TEST FIND ROUTES WITH SEATS----");
+		System.out.println("------------------------------------------");
+		findRoutesWithSeats("PIT","DCA","11/15/2016");
+		findRoutesWithSeats("DCA","PIT","10/15/2016");
+		findRoutesWithSeats("SFA","DCA","3/2/2016");
+		findRoutesWithSeats("SFA","PIT","4/14/2016");
+		findRoutesWithSeats("LAX","DCA","2/5/2016");
+		findRoutesWithSeats("PIT","DCA","6/5/2016");
+	}
 	public static void findRoutesWithSeatsByAirline(String ca, String cb, String date, String aln){
 		String sql = "";
 		String aid = "";
 		int i = 0;
+		date = "to_date('"+date+"','mm/dd/yyyy')";
 		try{
 			sql = "SELECT aid FROM airline WHERE name = '" + aln+ "'";
 			ResultSet rs = stmt.executeQuery(sql);
@@ -1371,10 +1381,14 @@ public class airlineUI{
 			System.out.println("Direct routes: \n");
 			while(rs.next()){
 				String fn  = rs.getString("flight_number");
-				sql = "SELECT * FROM reservation_detail WHERE flight_date = '" + date + "' AND flight_number = '" + fn +"'";
+				String dc  = rs.getString("departure_city");
+				String dt  = rs.getString("departure_time");
+				String ac  = rs.getString("arrival_city");
+				String at  = rs.getString("arrival_time");
+				sql = "SELECT * FROM reservation_detail WHERE flight_date = " + date + " AND flight_number = '" + fn +"'";
 				rs1 = stmt2.executeQuery(sql);
 				if(rs1.next()){
-					sql = "Select plane_type FROM flight where flight_number = '" + fn +"'";
+					sql = "Select plane_type FROM flight WHERE flight_number = '" + fn +"'";
 					rs1 = stmt2.executeQuery(sql);
 					String planeType = "";
 					if(rs1.next()){
@@ -1383,7 +1397,7 @@ public class airlineUI{
 					else{
 						continue;
 					}
-					sql = "Select plane_capacity FROM plane plane_type = '" + planeType +"'";
+					sql = "Select plane_capacity FROM plane WHERE plane_type = '" + planeType +"'";
 					rs1 = stmt2.executeQuery(sql);
 					int capacity = 0;
 					if(rs1.next()){
@@ -1392,7 +1406,7 @@ public class airlineUI{
 					else{
 						continue;
 					}
-					sql = "Select count(*) as passengerCount FROM reservation_detail WHERE flight_date = '" + date + "' AND flight_number = '" + fn +"'";
+					sql = "Select count(*) as passengerCount FROM reservation_detail WHERE flight_date = " + date + " AND flight_number = '" + fn +"'";
 					rs1 = stmt.executeQuery(sql);
 					int passengerCount = 0;
 					if(rs1.next()){
@@ -1402,10 +1416,6 @@ public class airlineUI{
 						continue;
 					}
 					if(passengerCount < capacity){
-						String dc  = rs.getString("departure_city");
-						String dt  = rs.getString("departure_time");
-						String ac  = rs.getString("arrival_city");
-						String at  = rs.getString("arrival_time");
 						System.out.println("Flight no: "+fn);
 						System.out.println("Departs " + dc + " at " + dt);
 						System.out.println("Arrives at " + ac + " at " + at + "\n");
@@ -1426,10 +1436,14 @@ public class airlineUI{
 			rs = stmt.executeQuery(sql);
 			while(rs.next()){
 				String fn  = rs.getString("flight_number");
-				sql = "SELECT * FROM reservation_detail WHERE flight_date = '" + date + "' AND flight_number = '" + fn +"'";
+				String aCity = rs.getString("arrival_city");
+				String dTime = rs.getString("departure_time");
+				String aTime = rs.getString("arrival_time");
+				String schedule = rs.getString("weekely_schedule");
+				sql = "SELECT * FROM reservation_detail WHERE flight_date = " + date + " AND flight_number = '" + fn +"'";
 				rs1 = stmt2.executeQuery(sql);
 				if(rs1.next()){
-					sql = "Select plane_type FROM flight where flight_number = '" + fn +"'";
+					sql = "Select plane_type FROM flight WHERE flight_number = '" + fn +"'";
 					rs1 = stmt2.executeQuery(sql);
 					String planeType = "";
 					if(rs1.next()){
@@ -1447,7 +1461,7 @@ public class airlineUI{
 					else{
 						continue;
 					}
-					sql = "Select count(*) as passengerCount FROM reservation_detail WHERE flight_date = '" + date + "' AND flight_number = '" + fn +"'";
+					sql = "Select count(*) as passengerCount FROM reservation_detail WHERE flight_date = " + date + " AND flight_number = '" + fn +"'";
 					rs1 = stmt2.executeQuery(sql);
 					int passengerCount = 0;
 					if(rs1.next()){
@@ -1458,10 +1472,6 @@ public class airlineUI{
 					}
 					if(passengerCount < capacity){
 						ResultSet rs2 = null;
-						String aCity = rs.getString("arrival_city");
-						String dTime = rs.getString("departure_time");
-						String aTime = rs.getString("arrival_time");
-						String schedule = rs.getString("weekely_schedule");
 						sql = "SELECT * FROM flight WHERE departure_city = '" + aCity + "' AND arrival_city = '" + cb +"' AND airline_id = '"+aid+"'";
 						rs2 = stmt3.executeQuery(sql);
 						while(rs2.next()){
@@ -1496,7 +1506,7 @@ public class airlineUI{
 							if(sameday == false){
 								continue;
 							}
-							sql = "Select plane_type FROM flight where flight_number = '" + fn +"'";
+							sql = "Select plane_type FROM flight WHERE flight_number = '" + fn +"'";
 							rs1 = stmt2.executeQuery(sql);
 							planeType = "";
 							if(rs1.next()){
@@ -1505,7 +1515,7 @@ public class airlineUI{
 							else{
 								continue;
 							}
-							sql = "Select plane_capacity FROM plane plane_type = '" + planeType +"'";
+							sql = "Select plane_capacity FROM plane WHERE plane_type = '" + planeType +"'";
 							rs1 = stmt2.executeQuery(sql);
 							int capacity2 = 0;
 							if(rs1.next()){
@@ -1514,7 +1524,7 @@ public class airlineUI{
 							else{
 								continue;
 							}
-							sql = "Select count(*) as passengerCount FROM reservation_detail WHERE flight_date = '" + date + "' AND flight_number = '" + fn +"'";
+							sql = "Select count(*) as passengerCount FROM reservation_detail WHERE flight_date = " + date + " AND flight_number = '" + fn +"'";
 							rs1 = stmt2.executeQuery(sql);
 							int passengerCount2 = 0;
 							if(rs1.next()){
@@ -1546,6 +1556,11 @@ public class airlineUI{
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	public static void stFindRoutesWithSeatsByAirline(){
+		System.out.println("-----------------------------------------------------");
+		System.out.println("----STRESS TEST FIND ROUTES WITH SEATS BY AIRLINE----");
+		System.out.println("-----------------------------------------------------");
 	}
 	
 	public static void showReservationInfo(String r_no){
