@@ -1354,10 +1354,11 @@ public class airlineUI{
 		System.out.println("------------------------------------------");
 		findRoutesWithSeats("PIT","DCA","11/15/2016");
 		findRoutesWithSeats("DCA","PIT","10/15/2016");
-		findRoutesWithSeats("SFA","DCA","3/2/2016");
-		findRoutesWithSeats("SFA","PIT","4/14/2016");
-		findRoutesWithSeats("LAX","DCA","2/5/2016");
-		findRoutesWithSeats("PIT","DCA","6/5/2016");
+		findRoutesWithSeats("SFA","DCA","11/6/2016");
+		findRoutesWithSeats("SFA","PIT","11/1/2016");
+		findRoutesWithSeats("LAX","DCA","11/1/2016");
+		findRoutesWithSeats("PIT","DCA","11/14/2016");
+		findRoutesWithSeats("DCA","SFA","11/5/2016");
 	}
 	public static void findRoutesWithSeatsByAirline(String ca, String cb, String date, String aln){
 		String sql = "";
