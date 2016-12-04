@@ -1366,6 +1366,8 @@ public class airlineUI{
 		findRoutesWithSeats("PIT","DCA","11/14/2016");
 		System.out.println("---DCA to SFA on 12/4/2016");
 		findRoutesWithSeats("DCA","SFA","12/4/2016");
+		System.out.println("---LAX to SFA on 12/4/2016");
+		findRoutesWithSeats("LAX","SFA","12/4/2016");
 	}
 	public static void findRoutesWithSeatsByAirline(String ca, String cb, String date, String aln){
 		String sql = "";
@@ -1570,19 +1572,21 @@ public class airlineUI{
 		System.out.println("----STRESS TEST FIND ROUTES WITH SEATS BY AIRLINE----");
 		System.out.println("-----------------------------------------------------");
 		System.out.println("---PIT to DCA on 11/15/2016 on airline United Airlines");
-		findRoutesWithSeats("PIT","DCA","11/15/2016","United Airlines");
+		findRoutesWithSeatsByAirline("PIT","DCA","11/15/2016","United Airlines");
 		System.out.println("---DCA to PIT on 10/15/2016 on airline Lufthansa");
-		findRoutesWithSeats("DCA","PIT","10/15/2016","Lufthansa");
+		findRoutesWithSeatsByAirline("DCA","PIT","10/15/2016","Lufthansa");
 		System.out.println("---SFA to DCA on 11/6/2016 on airline United Airlines");
-		findRoutesWithSeats("SFA","DCA","11/6/2016","United Airlines");
+		findRoutesWithSeatsByAirline("SFA","DCA","11/6/2016","United Airlines");
 		System.out.println("---SFA to PIT on 11/1/2016 on airline British Airways");
-		findRoutesWithSeats("SFA","PIT","11/1/2016","British Airways");
+		findRoutesWithSeatsByAirline("SFA","PIT","11/1/2016","British Airways");
 		System.out.println("---PIT to DCA on 11/1/2016 on airline United Airlines");
-		findRoutesWithSeats("PIT","DCA","11/1/2016","United Airlines");
+		findRoutesWithSeatsByAirline("PIT","DCA","11/1/2016","United Airlines");
 		System.out.println("---PIT to DCA on 11/14/2016 on airline United Airlines");
-		findRoutesWithSeats("PIT","DCA","11/14/2016","United Airlines");
-		System.out.println("---DCA to SFA on 12/4/2016 on airline United Airlines"");
-		findRoutesWithSeats("DCA","SFA","12/4/2016","United Airlines");
+		findRoutesWithSeatsByAirline("PIT","DCA","11/14/2016","United Airlines");
+		System.out.println("---DCA to SFA on 12/4/2016 on airline United Airlines");
+		findRoutesWithSeatsByAirline("DCA","SFA","12/4/2016","United Airlines");
+		System.out.println("---LAX to SFA on 12/4/2016 on airline Delta Air Lines");
+		findRoutesWithSeatsByAirline("LAX","SFA","12/4/2016", "Delta Air Lines");
 	}
 	
 	public static void showReservationInfo(String r_no){
@@ -1617,6 +1621,7 @@ public class airlineUI{
 			String input = String.valueOf(i);
 			showReservationInfo(input);
 		}
+		showReservationInfo("351");
 		for(int i = 300; i < 320; i++){
 			String input = String.valueOf(i);
 			showReservationInfo(input);
