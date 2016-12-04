@@ -194,15 +194,15 @@ INSERT INTO FLIGHT VALUES ('100', '001', 'E190', 'ATL', 'LAX', '2300','0100', 'S
 
 --price
 
-INSERT INTO PRICE VALUES ('PIT', 'DCA', '003', 200, 100);
+INSERT INTO PRICE VALUES ('PIT', 'DCA', '001', 200, 100);
 INSERT INTO PRICE VALUES ('JFK', 'DCA', '003', 100, 50);
-INSERT INTO PRICE VALUES ('LAX', 'DCA', '001', 350, 250);
+INSERT INTO PRICE VALUES ('LAX', 'DCA', '005', 350, 250);
 INSERT INTO PRICE VALUES ('SFA', 'PIT', '004', 600, 550);
 INSERT INTO PRICE VALUES ('SFA', 'DCA', '003', 500, 400);
 INSERT INTO PRICE VALUES ('DCA', 'SFA', '001', 450, 400);
-INSERT INTO PRICE VALUES ('ATL', 'LAX', '010', 350, 300);
-
-
+INSERT INTO PRICE VALUES ('ATL', 'LAX', '004', 350, 300);
+INSERT INTO PRICE VALUES ('LAX', 'SFA', '003', 370, 325);
+INSERT INTO PRICE VALUES ('SFA', 'LAX', '001', 300, 250);
 
 -- customer values
 insert into customer values('000000000', 'Mr', 'heywood', 'mccrone', '0000000000019952', to_date('10/10/2020', 'mm/dd/yyyy'), 'school', 'Orlando', 'ND', '0000000407', 'heywoodmccrone@gmail.com', '00002');
@@ -1215,4 +1215,6 @@ insert into reservation values('349', '000000097', '723', '0000000000059238', to
 insert into reservation_detail values('349', '027', to_date('12/2/2016', 'mm/dd/yyyy'), 1);
 insert into reservation values('350', '000000098', '606', '0000000000026286', to_date('7/6/2016', 'mm/dd/yyyy'), '1', 'LAX', 'DCA');
 insert into reservation_detail values('350', '004', to_date('12/4/2016', 'mm/dd/yyyy'), 1);
-
+insert into reservation values('351', '000000098', '606', '0000000000026286', to_date('11/4/2016', 'mm/dd/yyyy'), '1', 'LAX', 'SFA');
+insert into reservation_detail values('351', '018', to_date('12/4/2016', 'mm/dd/yyyy'), 1);
+insert into reservation_detail values('351', '069', to_date('12/4/2016', 'mm/dd/yyyy'), 2);
