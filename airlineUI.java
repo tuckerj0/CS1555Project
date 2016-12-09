@@ -79,7 +79,7 @@ public class airlineUI{
 		System.out.println("--Stress test command can only be run once");
 		System.out.println("--Prior to running, run pittToursData.sql");
 		System.out.println("--You must purge the database and rerun pittToursData.sql to run a second time");
-		System.out.println("--Output will be redirected to stressTestOutput.txt");
+		System.out.println("--Output data will be redirected to stressTestOutput.txt");
 		System.out.println("--SQL errors will print to console");
 		System.out.println("Input 1 to continue. Any other input will return to menu.");
 		int c = scanner.nextInt();
@@ -98,7 +98,7 @@ public class airlineUI{
 		o = new PrintStream(fout);
 		System.setOut(o);
 		//Stess test admin Interface
-		System.out.println("-------------------START-------------------");
+		System.out.println("-------------------START---------------------");
 		System.out.println("---------------------------------------------");
 		System.out.println("---------------------------------------------");
 		System.out.println("---------------ADMIN INTERFACE---------------");
@@ -719,6 +719,7 @@ public class airlineUI{
 			addCustomer(cid++, "mrs", "eileen", "shaw", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
 			addCustomer(cid++, "mrs", "sam", "ham", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
 			addCustomer(cid++, "mrs", "leslie", "dean", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			System.err.println("10 customers added");
 			rs = stmt.executeQuery(sql);
 			int newCno = -1;
 			if(rs.next()){
@@ -738,6 +739,7 @@ public class airlineUI{
 			addCustomer(cid++, "mrs", "lily", "shaw", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
 			addCustomer(cid++, "mrs", "samantha", "ham", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
 			addCustomer(cid++, "mrs", "lord", "dean", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			System.err.println("10 customers added");
 			rs = stmt.executeQuery(sql);	
 			if(rs.next()){
 				cno  = rs.getInt("cno");
@@ -754,6 +756,7 @@ public class airlineUI{
 			addCustomer(cid++, "mrs", "donna", "shaw", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
 			addCustomer(cid++, "mrs", "carly", "ham", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
 			addCustomer(cid++, "mrs", "olivia", "dean", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			System.err.println("10 customers added");
 			rs = stmt.executeQuery(sql);	
 			if(rs.next()){
 				cno  = rs.getInt("cno");
@@ -770,6 +773,7 @@ public class airlineUI{
 			addCustomer(cid++, "mrs", "staci", "shaw", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
 			addCustomer(cid++, "mrs", "taylor", "ham", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
 			addCustomer(cid++, "mrs", "liv", "dean", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			System.err.println("10 customers added");
 			rs = stmt.executeQuery(sql);	
 			if(rs.next()){
 				cno  = rs.getInt("cno");
@@ -786,12 +790,14 @@ public class airlineUI{
 			addCustomer(cid++, "mrs", "megan", "shaw", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
 			addCustomer(cid++, "mrs", "jacky", "ham", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
 			addCustomer(cid++, "mrs", "karly", "dean", "1111222233334444","to_date('12/09/2019', 'mm/dd/yyyy')", "Forbes", "Pittsburgh","PA","1009998877","me@gmail.com",0);
+			System.err.println("10 customers added");
 			rs = stmt.executeQuery(sql);	
 			if(rs.next()){
 				cno  = rs.getInt("cno");
 			}
 			System.out.println("Current customer count after adding 50 total: " + cno);
-			
+			System.err.println("Success");
+			System.err.println("Finished testing add customer");
 		}catch(SQLException se){
 			se.printStackTrace();
 		}catch(Exception e){
@@ -828,6 +834,7 @@ public class airlineUI{
 		System.out.println("---------------------------------");
 		System.out.println("----STRESS TEST SHOW CUSTOMER----");
 		System.out.println("---------------------------------");
+		System.err.println("Testing show customers");
 		System.out.println("Should be found:");
 		showCustomer("john","ham");
 		showCustomer("johny","hamma");
@@ -839,7 +846,7 @@ public class airlineUI{
 		showCustomer("eileen", "shaw");
 		showCustomer("sam", "ham");
 		showCustomer("leslie", "dean");
-		
+		System.err.println("Showing 10 cutomers");
 		showCustomer("eli", "ham");
 		showCustomer("junior", "hamma");
 		showCustomer("juno", "something");
@@ -850,7 +857,7 @@ public class airlineUI{
 		showCustomer("lily", "shaw");
 		showCustomer("samantha", "ham");
 		showCustomer("lord", "dean");
-		
+		System.err.println("Showing 10 cutomers");
 		showCustomer("job", "ham");
 		showCustomer("george", "hamma");
 		showCustomer("jeb", "something");
@@ -861,13 +868,16 @@ public class airlineUI{
 		showCustomer("donna", "shaw");
 		showCustomer("carly", "ham");
 		showCustomer("olivia", "dean");
-		
+		System.err.println("Showing 10 cutomers");
 		System.out.println("Should not be found:");
 		showCustomer("not","found");
 		showCustomer("some","guy");
 		showCustomer("some","girl");
 		showCustomer("doesnot","exist");
 		showCustomer("aaaaaa","notaname");
+		System.err.println("5 customers should not be found");
+		System.err.println("Success");
+		System.err.println("Finished testing show customer");
 	}
 	public static void findPrice(String ca, String cb){
 		String sql = "";
@@ -922,6 +932,8 @@ public class airlineUI{
 		System.out.println("------------------------------");
 		System.out.println("----STRESS TEST FIND PRICE----");
 		System.out.println("------------------------------");
+		System.err.println("Testing find price");
+		System.err.println("Finding price for 11 routes");
 		findPrice("PIT", "DCA");
 		findPrice("PIT", "SFA");
 		findPrice("PIT", "ATL");
@@ -933,6 +945,8 @@ public class airlineUI{
 		findPrice("DCA", "SFA");
 		findPrice("SFA", "DCA");
 		findPrice("LAX", "DCA");
+		System.err.println("Success");
+		System.err.println("Finished testing find price");
 	}
 	public static void findRoutes(String ca, String cb){
 		String sql = "";
@@ -1015,6 +1029,8 @@ public class airlineUI{
 		System.out.println("-------------------------------");
 		System.out.println("----STRESS TEST FIND ROUTES----");
 		System.out.println("-------------------------------");
+		System.err.println("Stress testing find routes");
+		System.err.println("Finding routes for 10 departure/arrival cities");
 		System.out.println("----PIT to DCA");
 		findRoutes("PIT", "DCA");
 		System.out.println("----PIT to SFA");
@@ -1035,6 +1051,8 @@ public class airlineUI{
 		findRoutes("SFA", "DCA");
 		System.out.println("----LAX to DCA");
 		findRoutes("LAX", "DCA");
+		System.err.println("Success");
+		System.err.println("Finished testing finding routes");
 	}
 	public static void findRoutesByAirline(String ca, String cb, String aln){
 		String sql = "";
@@ -1130,6 +1148,8 @@ public class airlineUI{
 		System.out.println("------------------------------------------");
 		System.out.println("----STRESS TEST FIND ROUTES By Airline----");
 		System.out.println("------------------------------------------");
+		System.err.println("Stress testing finding routes by airline");
+		System.err.println("Testing 15 departure/ arrival city/ airline id combinations");
 		System.out.println("----PIT to DCA on airline United Airlines");
 		findRoutesByAirline("PIT", "DCA", "United Airlines");
 		System.out.println("----PIT to SFA on airline United Airlines");
@@ -1160,6 +1180,8 @@ public class airlineUI{
 		findRoutesByAirline("DCA", "SFA", "Delta Air Lines");
 		System.out.println("----ATL to DCA on airline United Airlines");
 		findRoutesByAirline("ATL", "DCA", "United Airlines");
+		System.err.println("Success");
+		System.err.println("Finsished testing finginf routes by airline");
 	}
 	public static void findRoutesWithSeats(String ca, String cb, String date){
 		String sql = "";
@@ -1352,6 +1374,8 @@ public class airlineUI{
 		System.out.println("------------------------------------------");
 		System.out.println("----STRESS TEST FIND ROUTES WITH SEATS----");
 		System.out.println("------------------------------------------");
+		System.err.println("Stress testing find routes with seats");
+		System.err.println("Testing 8 arrival/ departure/ date combos");
 		System.out.println("---PIT to DCA on 11/15/2016");
 		findRoutesWithSeats("PIT","DCA","11/15/2016");
 		System.out.println("---DCA to PIT on 10/15/2016");
@@ -1368,6 +1392,8 @@ public class airlineUI{
 		findRoutesWithSeats("DCA","SFA","12/4/2016");
 		System.out.println("---LAX to SFA on 12/4/2016");
 		findRoutesWithSeats("LAX","SFA","12/4/2016");
+		System.err.println("Success");
+		System.err.println("Finished testing find routes with seats");
 	}
 	public static void findRoutesWithSeatsByAirline(String ca, String cb, String date, String aln){
 		String sql = "";
@@ -1571,6 +1597,8 @@ public class airlineUI{
 		System.out.println("-----------------------------------------------------");
 		System.out.println("----STRESS TEST FIND ROUTES WITH SEATS BY AIRLINE----");
 		System.out.println("-----------------------------------------------------");
+		System.err.println("Stress testing find routes with seats by airline");
+		System.err.println("testing 8 calls");
 		System.out.println("---PIT to DCA on 11/15/2016 on airline United Airlines");
 		findRoutesWithSeatsByAirline("PIT","DCA","11/15/2016","United Airlines");
 		System.out.println("---DCA to PIT on 10/15/2016 on airline Lufthansa");
@@ -1587,6 +1615,8 @@ public class airlineUI{
 		findRoutesWithSeatsByAirline("DCA","SFA","12/4/2016","United Airlines");
 		System.out.println("---LAX to SFA on 12/4/2016 on airline Delta Air Lines");
 		findRoutesWithSeatsByAirline("LAX","SFA","12/4/2016", "Delta Air Lines");
+		System.err.println("Success");
+		System.err.println("Finished testing find routes with seats by airline");
 	}
 	
 	public static void showReservationInfo(String r_no){
@@ -1617,6 +1647,8 @@ public class airlineUI{
 		System.out.println("-----------------------------------------");
 		System.out.println("----STRESS TEST SHOW RESERVATION INFO----");
 		System.out.println("-----------------------------------------");
+		System.err.println("Stress testing show reservation info");
+		System.err.println("testing 73 reservations");
 		for(int i = 50; i < 100; i++){
 			String input = String.valueOf(i);
 			showReservationInfo(input);
@@ -1630,6 +1662,8 @@ public class airlineUI{
 		showReservationInfo("0");
 		showReservationInfo("-1");
 		showReservationInfo("9999");
+		System.err.println("Success");
+		System.err.println("Finished testing show reservation info");
 	}
 	public static void buyTicket(String r_no){
 		String sql;
@@ -1660,6 +1694,8 @@ public class airlineUI{
 		System.out.println("------------------------------");
 		System.out.println("----STRESS TEST BUY TICKET----");
 		System.out.println("------------------------------");
+		System.err.println("Stress testing buy tickets");
+		System.err.println("Testing 63 ticket purchases");
 		for(int i = 50; i < 100; i++){
 			String input = String.valueOf(i);
 			showReservationInfo(input);
@@ -1673,5 +1709,7 @@ public class airlineUI{
 		showReservationInfo("0");
 		showReservationInfo("-1");
 		showReservationInfo("9999");
+		System.err.println("Success");
+		System.err.println("Finished testing buy ticket");
 	}
 }
