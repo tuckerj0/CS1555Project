@@ -104,6 +104,13 @@ public class airlineUI{
 		System.out.println("---------------ADMIN INTERFACE---------------");
 		System.out.println("---------------------------------------------");
 		System.out.println("---------------------------------------------");
+		stDeleteDatabase(); //task 1
+		stLoadAirlineInformation(); //task 2
+		stLoadScheduleInformation(); //task 3
+		stChangePricingInformation(); // task 4
+		stLoadPricingInformation(); //task 5
+		stLoadPlaneInformation(); //task 6
+		stGenerateManifesto(); // task 7
 		
 		//Stress test customer Interface
 		System.out.println("------------------------------------------------");
@@ -118,7 +125,7 @@ public class airlineUI{
 		stFindRoutesByAirline();	//task 5
 		stFindRoutesWithSeats();	//task 6
 		stFindRoutesWithSeatsByAirline();	//task 7
-				//task 8
+		stAddReservation();		//task 8
 		stShowReservationInfo();	//task 9
 		stBuyTicket();		//task 10
 		System.out.println("-------------------END--------------------");
@@ -176,7 +183,23 @@ public class airlineUI{
 				if (scan1.next().equals("C")) {
 					//change pricing information
 					try {
-						changePricingInformation();
+						scan1.nextLine();
+						
+						System.out.println("Please enter departure city as airport code. E.g. Pittsburgh will be PIT");
+						String departureCity = scan1.nextLine();
+					
+						System.out.println("Please enter arrival city as airport code. E.g. Pittsburgh will be PIT");
+						String arrivalCity = scan1.nextLine();
+						
+						System.out.println("Please enter airline ID number. The number should not be more than three numbers");
+						String airlineID = scan1.nextLine();
+								
+						System.out.println("Please enter the high cost for this flight. Input should be a max of 3 digits and rounded to the closest ones place. E.g. $230.10 will be 230");
+						int highCost = scan1.nextInt();
+						
+						System.out.println("Please enter the low cost for this flight. Input should be a max of 3 digits and rounded to the closest ones place. E.g. $230.10 will be 230");
+						int lowCost = scan1.nextInt();
+						changePricingInformation(departureCity, arrivalCity, airlineID, highCost, lowCost);
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
@@ -208,7 +231,14 @@ public class airlineUI{
 			}
 			else if(userInput == 6){
 				try {
-					generateManifesto();
+					Scanner scanner = new Scanner (System.in);
+					System.out.println("Please input the flight number. The flight number should not be more than 3 numbers: ");
+					String flightNumber = scanner.nextLine();
+					
+					System.out.println("Please input the date. The format of the date should be MM/DD/YYYY: ");
+					String date = scanner.nextLine();
+
+					generateManifesto(flightNumber, date);
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -271,6 +301,10 @@ public class airlineUI{
 		}
 		return 0;
 	}
+	public static void stDeleteDatabase() {
+		System.out.println("Testing if delete Database works");
+		deleteDatabase();
+	}
 	
 	public static void loadAirlineInformation() throws IOException, SQLException {
 		Scanner scan2 = new Scanner (System.in);
@@ -284,14 +318,56 @@ public class airlineUI{
 			String airlineID = var[0];
 			String airlineName = var[1];
 			String airlineAbbreviation = var[2];
-			String city = var[3];
-			String yearFounded = var[4];
+			//not sure why city is included?
+			//String city = var[3];
+			String yearFounded = var[3];
 			int year = Integer.parseInt(yearFounded);
 
 			String insertAirline = "INSERT INTO Airline (aid, name, abbreviation, year_founded) VALUES ('"+airlineID+"','" +airlineName+"','"+airlineAbbreviation+"','"+year+"')";
 			stmt.executeUpdate(insertAirline);
 		}
 		br.close();
+	}
+	
+	public static void stLoadAirlineInformation() {
+		System.out.println("Load airline information stress test");
+		System.out.println("We will test three different files");
+		System.out.println("Test file 1");
+		System.out.println("We will test load airline information, please have text file ready that has data in format: (airline_id,airline_name,airline_Abbreviation,city,year_founded");
+		try {
+			loadAirlineInformation();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("Test file 2");
+		System.out.println("We will test load airline information, please have text file ready that has data in format: (airline_id,airline_name,airline_Abbreviation,city,year_founded");
+		try {
+			loadAirlineInformation();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("Test file 3");
+		System.out.println("We will test load airline information, please have text file ready that has data in format: (airline_id,airline_name,airline_Abbreviation,city,year_founded");
+		try {
+			loadAirlineInformation();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 	
 	public static void loadScheduleInformation() throws IOException, SQLException {
@@ -317,62 +393,79 @@ public class airlineUI{
 		br.close();
 	}
 	
-	public static int changePricingInformation() throws SQLException {
-		Scanner input = new Scanner (System.in);
-		String departureCity;
-		String arrivalCity;
-		String airlineID;
-		int highCost;
-		int lowCost;
+	public static void stLoadScheduleInformation() {
+		System.out.println("Stress testing for load Schedule information");
+		System.out.println("We will test three different files");
+		System.out.println("Test file 1");
+		System.out.println("We will test load schedule information, please have text file ready that has data in format: (flight_number,plane_type,departure_city,arrival_city,departure_time,arrival_time,weekly_schedule");
+		try {
+			loadScheduleInformation();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		System.out.println("Please enter departure city as airport code. E.g. Pittsburgh will be PIT");
-		//if (input.next().length() > 3) {
-		//	System.out.println("Sorry you input too many letters for the airport code. Goodbye.");
-		//	return 0;
-		//}
-		//else {
-			departureCity = input.next();
-		//}
+		System.out.println("Test file 2");
+		System.out.println("We will test load schedule information, please have text file ready that has data in format: (flight_number,plane_type,departure_city,arrival_city,departure_time,arrival_time,weekly_schedule");
+		try {
+			loadScheduleInformation();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		System.out.println("Please enter arrival city as airport code. E.g. Pittsburgh will be PIT");
-		//if (input.next().length() > 3) {
-		//	System.out.println("Sorry you input too many letters for the airport code. Goodbye.");
-		//	return 0;
-		//}
-		//else {
-			arrivalCity = input.next();
-		//}
-		
-		System.out.println("Please enter airline ID number. The number should not be more than three numbers");
-		//if (input.next().length() > 3) {
-		//	System.out.println("Sorry you input too many numbers for the airline ID. Goodbye.");
-		//	return 0;
-		//}
-		//else {
-			airlineID = input.next();
-		//}
-		
-		System.out.println("Please enter the high cost for this flight. Input should be a max of 3 digits and rounded to the closest ones place. E.g. $230.10 will be 230");
-		//if (input.next().length() > 3) {
-		//	System.out.println("Sorry you inputt too many numbers for the High Cost. Goodbye.");
-		//	return 0;
-		//}
-		//else {
-			highCost = input.nextInt();
-		//}
-		
-		System.out.println("Please enter the low cost for this flight. Input should be a max of 3 digits and rounded to the closest ones place. E.g. $230.10 will be 230");
-		//if (input.next().length() > 3) {
-		//	System.out.println("Sorry you input too many numbers for the airline ID. Goodbye.");
-		//	return 0;
-		//}
-		//else {
-			lowCost = input.nextInt();
-		//}
-		
+		System.out.println("Test file 3");
+		System.out.println("We will test load schedule information, please have text file ready that has data in format: (flight_number,plane_type,departure_city,arrival_city,departure_time,arrival_time,weekly_schedule");
+		try {
+			loadScheduleInformation();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static int changePricingInformation(String departureCity,String arrivalCity, String airlineID, int highCost, int lowCost) throws SQLException {
 		String updatePrice = "UPDATE PRICE SET high_price =" + highCost + ",low_price=" + lowCost + "WHERE departure_city ='" + departureCity + "' and arrival_city='" + arrivalCity + "' and airline_id='"+airlineID+ "'";
 		stmt.executeUpdate(updatePrice);
 		return 0;
+	}
+	
+	//change price stress test
+	public static void stChangePricingInformation () {
+		System.out.println("Testing change pricing information");
+
+		System.out.println("Changing price information to: PIT, DCA, 001, 300, 50");
+		try {
+			changePricingInformation("PIT", "DCA", "001", 300,50);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("Changing price information to: JFK, DCA, 003, 100, 20");
+		try {
+			changePricingInformation("JFK", "DCA", "003", 100,20);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("Changing price information to: LAX, DCA, 005, 200, 100");
+		try {
+			changePricingInformation("LAX", "DCA", "005", 200,100);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static void loadPricingInformation() throws IOException, SQLException {
@@ -396,6 +489,44 @@ public class airlineUI{
 		br.close();
 	}
 	
+	//load pricing information stress test
+	public static void stLoadPricingInformation() {
+		System.out.println("Testing load price information");
+		System.out.println("We will be testing three differnt files");
+		System.out.println("Test file 1");
+		System.out.println("We will test load pricing information, please have text file ready that has data in format: (departure_city,arrival_city,airline_ID,high_price,low_price");
+		try {
+			loadPricingInformation();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Test file 2");
+		System.out.println("We will test load pricing information, please have text file ready that has data in format: (departure_city,arrival_city,airline_ID,high_price,low_price");
+		try {
+			loadPricingInformation();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Test file 3");
+		System.out.println("We will test load pricing information, please have text file ready that has data in format: (departure_city,arrival_city,airline_ID,high_price,low_price");
+		try {
+			loadPricingInformation();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	public static int loadPlaneInformation() throws IOException, SQLException {
 		Scanner scan = new Scanner (System.in);
 		System.out.println("Please enter a file name to load plane information");
@@ -427,22 +558,85 @@ public class airlineUI{
 		return 0;
 	}
 	
-	public static int generateManifesto() throws SQLException {
-		Scanner scan = new Scanner (System.in);
-		System.out.println("Please input the flight number. The flight number should not be more than 3 numbers: ");
-		String flightNumber = scan.next();
-		
-		System.out.println("Please input the date. The format of the date should be MM/DD/YYYY: ");
-		String date = scan.next();
-		
-		if (flightNumber.length() > 3) {
-			System.out.println("Flight number input is incorrect.");
-			return 0;
+	public static void stLoadPlaneInformation() {
+		System.out.println("Test file 1");
+		System.out.println("We will test load Plane information, please have text file ready that has data in format: (plane_type,manufacture,plane_capacity,last_service,year,owner_ID");
+		try {
+			loadPlaneInformation();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-
+		System.out.println("Test file 2");
+		System.out.println("We will test load Plane information, please have text file ready that has data in format: (plane_type,manufacture,plane_capacity,last_service,year,owner_ID");
+		try {
+			loadPlaneInformation();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Test file 3");
+		System.out.println("We will test load Plane information, please have text file ready that has data in format: (plane_type,manufacture,plane_capacity,last_service,year,owner_ID");
+		try {
+			loadPlaneInformation();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public static int generateManifesto(String flightNumber, String date) throws SQLException {
+		
 		String manifesto = "Select salutation, first_name, last_name FROM Customer AS c INNER JOIN Reservation as r ON c.cid = r.cid INNER JOIN Reservation_detail as d ON r.reservation_number = d.reservation_number WHERE Reservation_detail.flight_number = " + flightNumber + " and" + "Reservation_detail.flight_date = " + date + "";
 		ResultSet rs = stmt.executeQuery(manifesto);
+		ResultSetMetaData rsMeta = rs.getMetaData();
+		int columnsNum = rsMeta.getColumnCount();
+		while (rs.next()) {
+			for (int i = 1; i<columnsNum; i++) {
+				if (i<1) {
+					System.out.print(", ");
+				}
+				String columnVal = rs.getString(i);
+				System.out.println(columnVal + " " + rsMeta.getColumnName(i));
+			}
+			System.out.print("");
+		}
+		
 		return 0;
+	}
+	
+	public static void stGenerateManifesto() {
+		System.out.println("Generating manifesto...");
+		System.out.println("Getting manifesto for flight 028 on 11/10/2016");
+		try {
+			generateManifesto("028", "11/10/2016");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Getting manifesto for flight 017 on 11/11/2016");
+		try {
+			generateManifesto("017","11/11/2016");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Generating manifesto for flight 082 on 11/19/2016");
+		try {
+			generateManifesto("082", "11/16/2016");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 //-------------------------------------------------------------	
@@ -640,7 +834,12 @@ public class airlineUI{
 				findRoutesWithSeatsByAirline(ca, cb, date, aln);
 			}
 			else if(userInput == 8){
-				
+				try {
+					addReservation();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			else if(userInput == 9){
 				scanner.nextLine();
@@ -1711,5 +1910,79 @@ public class airlineUI{
 		showReservationInfo("9999");
 		System.err.println("Success");
 		System.err.println("Finished testing buy ticket");
+	}
+	
+	public static void addReservation () throws SQLException {
+		System.out.println("I will need you to provide all the information of all your flights. We will get the info one leg at a time");
+		Scanner scan = new Scanner (System.in);
+		int leg = 0;
+		String flightDate = "";
+		String flightNumber = "";
+		int flightCount = 0;
+		int planeCapacity = 0;
+		//boolean will be true only if flight has seats
+		boolean flightFlag = false; 
+		//start generating reservation numbers at 351
+		int reservationNumber = 351;
+	
+		for (int i = 0; i<4; i++){
+			System.out.println("Enter your flight number. If there are no more flight numbers to be input then enter 0");
+			flightNumber = scan.next();
+			//if flight number is 0 then leave loop
+			if (Integer.parseInt(flightNumber) == 0) {
+				System.out.println("You have chosen to not input anymore legs");
+				break;
+			}
+			else {
+				//increase value of leg
+				leg++;
+				// continue to enter date
+				System.out.println("Please enter the date for this leg");
+				flightDate = scan.next();
+				
+				//get flight count
+				Statement st = conn.createStatement();
+				String flightNumberCount = "SELECT COUNT(flight_number) FROM Reservation_detail WHERE flight_number =" + flightNumber + " and flight_date = " + flightDate + ";";
+				ResultSet res = st.executeQuery(flightNumberCount); 
+				while (res.next()) {
+					flightCount = res.getInt(1);
+				}
+				
+				//get plane capacity count
+				Statement st1 = conn.createStatement();
+				String planeCapacityCount = "SELECT plane_capacity FROM Plane AS p WHERE p.plane_type = flight.plane_type and flight.flight_number =" + flightNumber + ";";
+				ResultSet res1 = st1.executeQuery(planeCapacityCount);
+				while (res1.next()) {
+					planeCapacity = res.getInt(1);
+				}
+				
+				//now compare the capacities
+				//if flightcount is less than plane capacity then there is available seats
+				if (flightCount < planeCapacity) {
+					System.out.println("There are avilable seats on this flight");
+					flightFlag = true;
+				}
+				else {
+					System.out.println("There are no available seats on this flight");
+					flightFlag = false;
+				}
+			}
+		} // end for loop
+		// all legs have available seats. WE GOOD!
+		if (flightFlag == true) {
+			//reservation number starts at 351 and keeps going up for each reservation made
+			//generates unique reservation number
+			reservationNumber = reservationNumber++;
+			System.out.println("Congrats, all your flights have available seats. Here is your reservation number: " + reservationNumber);
+		}
+		else {
+			System.out.println("Sorry one of the flights you mentioned does not have any available seats.");
+		}
+		
+		scan.close();
+	}
+	
+	public static void stAddReservation() {
+		
 	}
 }
