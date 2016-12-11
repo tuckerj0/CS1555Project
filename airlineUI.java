@@ -104,7 +104,6 @@ public class airlineUI{
 		System.out.println("---------------ADMIN INTERFACE---------------");
 		System.out.println("---------------------------------------------");
 		System.out.println("---------------------------------------------");
-		stDeleteDatabase(); //task 1
 		stLoadAirlineInformation(); //task 2
 		stLoadScheduleInformation(); //task 3
 		stChangePricingInformation(); // task 4
@@ -128,6 +127,7 @@ public class airlineUI{
 		stAddReservation();		//task 8
 		stShowReservationInfo();	//task 9
 		stBuyTicket();		//task 10
+		stDeleteDatabase(); //task 1
 		System.out.println("-------------------END--------------------");
 		System.setOut(console);
         System.out.println("Stress test finished");
@@ -144,6 +144,7 @@ public class airlineUI{
 			System.out.println("6. Generate passenger manifest for a specific flight on a given day");
 			System.out.println("7. Quit");
 			int userInput = scan.nextInt();
+			scan.nextLine();
 			
 			if(userInput == 1){
 				System.out.println("Are you sure you want to delete the entire database? Please type Y for yes or N for no");
@@ -267,43 +268,44 @@ public class airlineUI{
 	public static int deleteDatabase () {
 		System.out.println("Deleting Database...");
 		try {
-			String dateDelete = "DELETE * FROM Date";
+			String dateDelete = "DROP TABLE timeInfo";
 			stmt.executeUpdate(dateDelete);
 			System.out.println("Date erased");
-			String reservationDetailsDelete = "DELETE * FROM Reservation_detail";
+			String reservationDetailsDelete = "DROP TABLE reservation_detail";
 			stmt.executeUpdate(reservationDetailsDelete);
 			System.out.println("Reservation data detail erased");
-			String reservationDelete = "DELETE * FROM Reservation";
+			String reservationDelete = "DROP TABLE reservation";
 			stmt.executeUpdate(reservationDelete);
 			System.out.println("Reservation data erased");
-			String customerDelete = "DELETE * FROM Customer";
+			String customerDelete = "DROP TABLE customer";
 			stmt.executeUpdate(customerDelete);
 			System.out.println("Customer data erased");
-			String priceDelete = "DELETE * FROM Price";
+			String priceDelete = "DROP TABLE price";
 			stmt.executeUpdate(priceDelete);
 			System.out.println("Price data erased");
-			String planeDelete = "DELETE * FROM Plane";
-			stmt.executeUpdate(planeDelete);
-			System.out.println("Plane data erased");
-			String flightDelete = "DELETE * FROM Flight";
+			String flightDelete = "DROP TABLE flight";
 			stmt.executeUpdate(flightDelete);
 			System.out.println("Flight data erased");
-			Statement stmt = conn.createStatement();
-			String airlineDelete = "DELETE * FROM Airline";
+			String planeDelete = "DROP TABLE plane";
+			stmt.executeUpdate(planeDelete);
+			System.out.println("Plane data erased");
+			
+			String airlineDelete = "DROP TABLE airline";
 			stmt.executeUpdate(airlineDelete);
 			System.out.println("Airline data erased");
 			System.out.println("Database is now empty");
-			conn.commit();
 			
 		} catch (SQLException e) {
+			e.printStackTrace();
 			System.out.println("An error occured while deleting database. Goodbye.");
 			System.exit(0);
 		}
 		return 0;
 	}
 	public static void stDeleteDatabase() {
-		System.out.println("Testing if delete Database works");
+		System.err.println("Testing if delete Database works");
 		deleteDatabase();
+		System.err.println("Success");
 	}
 	
 	public static void loadAirlineInformation() throws IOException, SQLException {
@@ -330,10 +332,10 @@ public class airlineUI{
 	}
 	
 	public static void stLoadAirlineInformation() {
-		System.out.println("Load airline information stress test");
-		System.out.println("We will test three different files");
-		System.out.println("Test file 1");
-		System.out.println("We will test load airline information, please have text file ready that has data in format: (airline_id,airline_name,airline_Abbreviation,city,year_founded");
+		System.err.println("Load airline information stress test");
+		System.err.println("We will test three different files");
+		System.err.println("Test file 1");
+		System.err.println("We will test load airline information, please have text file ready that has data in format: (airline_id,airline_name,airline_Abbreviation,city,year_founded");
 		try {
 			loadAirlineInformation();
 		} catch (IOException e) {
@@ -344,8 +346,8 @@ public class airlineUI{
 			e.printStackTrace();
 		}
 		
-		System.out.println("Test file 2");
-		System.out.println("We will test load airline information, please have text file ready that has data in format: (airline_id,airline_name,airline_Abbreviation,city,year_founded");
+		System.err.println("Test file 2");
+		System.err.println("We will test load airline information, please have text file ready that has data in format: (airline_id,airline_name,airline_Abbreviation,city,year_founded");
 		try {
 			loadAirlineInformation();
 		} catch (IOException e) {
@@ -356,8 +358,8 @@ public class airlineUI{
 			e.printStackTrace();
 		}
 		
-		System.out.println("Test file 3");
-		System.out.println("We will test load airline information, please have text file ready that has data in format: (airline_id,airline_name,airline_Abbreviation,city,year_founded");
+		System.err.println("Test file 3");
+		System.err.println("We will test load airline information, please have text file ready that has data in format: (airline_id,airline_name,airline_Abbreviation,city,year_founded");
 		try {
 			loadAirlineInformation();
 		} catch (IOException e) {
@@ -373,7 +375,9 @@ public class airlineUI{
 	public static void loadScheduleInformation() throws IOException, SQLException {
 		Scanner scan = new Scanner (System.in);
 		System.out.println("Please enter a file name to load flight information");
-		String fileName = scan.next();
+		String fileName = scan.nextLine();
+		if(fileName == null)
+			return;
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		String line;
 		System.out.println("Inserting flight info...");
@@ -394,10 +398,10 @@ public class airlineUI{
 	}
 	
 	public static void stLoadScheduleInformation() {
-		System.out.println("Stress testing for load Schedule information");
-		System.out.println("We will test three different files");
-		System.out.println("Test file 1");
-		System.out.println("We will test load schedule information, please have text file ready that has data in format: (flight_number,plane_type,departure_city,arrival_city,departure_time,arrival_time,weekly_schedule");
+		System.err.println("Stress testing for load Schedule information");
+		System.err.println("We will test three different files");
+		System.err.println("Test file 1");
+		System.err.println("We will test load schedule information, please have text file ready that has data in format: (flight_number,plane_type,departure_city,arrival_city,departure_time,arrival_time,weekly_schedule");
 		try {
 			loadScheduleInformation();
 		} catch (IOException e) {
@@ -408,8 +412,8 @@ public class airlineUI{
 			e.printStackTrace();
 		}
 		
-		System.out.println("Test file 2");
-		System.out.println("We will test load schedule information, please have text file ready that has data in format: (flight_number,plane_type,departure_city,arrival_city,departure_time,arrival_time,weekly_schedule");
+		System.err.println("Test file 2");
+		System.err.println("We will test load schedule information, please have text file ready that has data in format: (flight_number,plane_type,departure_city,arrival_city,departure_time,arrival_time,weekly_schedule");
 		try {
 			loadScheduleInformation();
 		} catch (IOException e) {
@@ -420,8 +424,8 @@ public class airlineUI{
 			e.printStackTrace();
 		}
 		
-		System.out.println("Test file 3");
-		System.out.println("We will test load schedule information, please have text file ready that has data in format: (flight_number,plane_type,departure_city,arrival_city,departure_time,arrival_time,weekly_schedule");
+		System.err.println("Test file 3");
+		System.err.println("We will test load schedule information, please have text file ready that has data in format: (flight_number,plane_type,departure_city,arrival_city,departure_time,arrival_time,weekly_schedule");
 		try {
 			loadScheduleInformation();
 		} catch (IOException e) {
@@ -441,9 +445,9 @@ public class airlineUI{
 	
 	//change price stress test
 	public static void stChangePricingInformation () {
-		System.out.println("Testing change pricing information");
+		System.err.println("Testing change pricing information");
 
-		System.out.println("Changing price information to: PIT, DCA, 001, 300, 50");
+		System.err.println("Changing price information to: PIT, DCA, 001, 300, 50");
 		try {
 			changePricingInformation("PIT", "DCA", "001", 300,50);
 		} catch (SQLException e) {
@@ -451,7 +455,7 @@ public class airlineUI{
 			e.printStackTrace();
 		}
 		
-		System.out.println("Changing price information to: JFK, DCA, 003, 100, 20");
+		System.err.println("Changing price information to: JFK, DCA, 003, 100, 20");
 		try {
 			changePricingInformation("JFK", "DCA", "003", 100,20);
 		} catch (SQLException e) {
@@ -459,19 +463,22 @@ public class airlineUI{
 			e.printStackTrace();
 		}
 		
-		System.out.println("Changing price information to: LAX, DCA, 005, 200, 100");
+		System.err.println("Changing price information to: LAX, DCA, 005, 200, 100");
 		try {
 			changePricingInformation("LAX", "DCA", "005", 200,100);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.err.println("Success");
 	}
 	
 	public static void loadPricingInformation() throws IOException, SQLException {
 		Scanner scan = new Scanner (System.in);
 		System.out.println("Please enter a file name to load pricing information");
-		String fileName = scan.next();
+		String fileName = scan.nextLine();
+		if(fileName == null)
+			return;
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		String line;
 		System.out.println("Inserting pricing info...");
@@ -491,10 +498,10 @@ public class airlineUI{
 	
 	//load pricing information stress test
 	public static void stLoadPricingInformation() {
-		System.out.println("Testing load price information");
-		System.out.println("We will be testing three differnt files");
-		System.out.println("Test file 1");
-		System.out.println("We will test load pricing information, please have text file ready that has data in format: (departure_city,arrival_city,airline_ID,high_price,low_price");
+		System.err.println("Testing load price information");
+		System.err.println("We will be testing three differnt files");
+		System.err.println("Test file 1");
+		System.err.println("We will test load pricing information, please have text file ready that has data in format: (departure_city,arrival_city,airline_ID,high_price,low_price");
 		try {
 			loadPricingInformation();
 		} catch (IOException e) {
@@ -504,8 +511,8 @@ public class airlineUI{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Test file 2");
-		System.out.println("We will test load pricing information, please have text file ready that has data in format: (departure_city,arrival_city,airline_ID,high_price,low_price");
+		System.err.println("Test file 2");
+		System.err.println("We will test load pricing information, please have text file ready that has data in format: (departure_city,arrival_city,airline_ID,high_price,low_price");
 		try {
 			loadPricingInformation();
 		} catch (IOException e) {
@@ -515,8 +522,8 @@ public class airlineUI{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Test file 3");
-		System.out.println("We will test load pricing information, please have text file ready that has data in format: (departure_city,arrival_city,airline_ID,high_price,low_price");
+		System.err.println("Test file 3");
+		System.err.println("We will test load pricing information, please have text file ready that has data in format: (departure_city,arrival_city,airline_ID,high_price,low_price");
 		try {
 			loadPricingInformation();
 		} catch (IOException e) {
@@ -526,11 +533,14 @@ public class airlineUI{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.err.println("Success");
 	}
 	public static int loadPlaneInformation() throws IOException, SQLException {
 		Scanner scan = new Scanner (System.in);
 		System.out.println("Please enter a file name to load plane information");
-		String fileName = scan.next();
+		String fileName = scan.nextLine();
+		if(fileName == null)
+			return -1;
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		String line;
 		System.out.println("Inserting plane info...");
@@ -559,8 +569,8 @@ public class airlineUI{
 	}
 	
 	public static void stLoadPlaneInformation() {
-		System.out.println("Test file 1");
-		System.out.println("We will test load Plane information, please have text file ready that has data in format: (plane_type,manufacture,plane_capacity,last_service,year,owner_ID");
+		System.err.println("Test file 1");
+		System.err.println("We will test load Plane information, please have text file ready that has data in format: (plane_type,manufacture,plane_capacity,last_service,year,owner_ID");
 		try {
 			loadPlaneInformation();
 		} catch (IOException e) {
@@ -570,8 +580,8 @@ public class airlineUI{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Test file 2");
-		System.out.println("We will test load Plane information, please have text file ready that has data in format: (plane_type,manufacture,plane_capacity,last_service,year,owner_ID");
+		System.err.println("Test file 2");
+		System.err.println("We will test load Plane information, please have text file ready that has data in format: (plane_type,manufacture,plane_capacity,last_service,year,owner_ID");
 		try {
 			loadPlaneInformation();
 		} catch (IOException e) {
@@ -581,8 +591,8 @@ public class airlineUI{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Test file 3");
-		System.out.println("We will test load Plane information, please have text file ready that has data in format: (plane_type,manufacture,plane_capacity,last_service,year,owner_ID");
+		System.err.println("Test file 3");
+		System.err.println("We will test load Plane information, please have text file ready that has data in format: (plane_type,manufacture,plane_capacity,last_service,year,owner_ID");
 		try {
 			loadPlaneInformation();
 		} catch (IOException e) {
@@ -592,6 +602,7 @@ public class airlineUI{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.err.println("Success");
 	}
 	
 	public static int generateManifesto(String flightNumber, String date) throws SQLException {
@@ -615,28 +626,29 @@ public class airlineUI{
 	}
 	
 	public static void stGenerateManifesto() {
-		System.out.println("Generating manifesto...");
-		System.out.println("Getting manifesto for flight 028 on 11/10/2016");
+		System.err.println("Generating manifesto...");
+		System.err.println("Getting manifesto for flight 028 on 11/10/2016");
 		try {
 			generateManifesto("028", "11/10/2016");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Getting manifesto for flight 017 on 11/11/2016");
+		System.err.println("Getting manifesto for flight 017 on 11/11/2016");
 		try {
 			generateManifesto("017","11/11/2016");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println("Generating manifesto for flight 082 on 11/19/2016");
+		System.err.println("Generating manifesto for flight 082 on 11/19/2016");
 		try {
 			generateManifesto("082", "11/16/2016");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.err.println("Success");
 	}
 
 //-------------------------------------------------------------	
@@ -1926,7 +1938,7 @@ public class airlineUI{
 		int reservationNumber = 351;
 	
 		for (int i = 0; i<4; i++){
-			System.out.println("Enter your flight number. If there are no more flight numbers to be input then enter 0");
+			System.out.println("Enter your flight number. If there are no more flight numbers to be inputted then enter 0");
 			flightNumber = scan.next();
 			//if flight number is 0 then leave loop
 			if (Integer.parseInt(flightNumber) == 0) {
