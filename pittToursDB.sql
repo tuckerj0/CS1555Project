@@ -199,6 +199,10 @@ declare @timeDiff
 where Flight.flight_number = Reservation_detail.flight_number
 end;/
 
+--------------------
+--Data starts here--
+--------------------
+
 --insert 10 airlines
 INSERT INTO AIRLINE VALUES ('001', 'United Airlines', 'UAL', 1931);
 INSERT INTO AIRLINE VALUES ('002', 'All Nippon Airways', 'ANA', 1952);
